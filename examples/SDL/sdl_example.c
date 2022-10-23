@@ -19,6 +19,12 @@
 #endif
 
 
+// Palette experiments
+//#define PICO8 1
+//#define CGA 1
+//#define GAME_BOY 1
+
+
 // Resolution DOOM renders at
 #define WIDTH 320
 #define HEIGHT 200
@@ -316,6 +322,157 @@ int main(int argc, char** argv)
         SDL_UnlockAudio();
 
         // Blit DOOM's framebuffer onto our SDL texture
+#if GAME_BOY
+        void* dst;
+        const unsigned char* src = doom_get_framebuffer(3);
+        int src_pitch = WIDTH * 3;
+        int dst_pitch;
+        const int palette_size = 4;
+        const int pico8_palette[4 * 3] = {
+            0x0f, 0x3, 0x80f,
+            0x30, 0x62, 0x30,
+            0x8b, 0xac, 0x0f,
+            0x9b, 0xbc, 0x0f
+        };
+        if (!SDL_LockTexture(render_target, NULL, &dst, &dst_pitch))
+        {
+            unsigned char* dst8 = (unsigned char*)dst;
+            for (int y = 0; y < HEIGHT; ++y)
+            {
+                for (int x = 0; x < WIDTH; ++x)
+                {
+                    int dstk = y * dst_pitch + x * 4;
+                    int srck = y * src_pitch + x * 3;
+
+                    int r = src[srck + 0];
+                    int g = src[srck + 1];
+                    int b = src[srck + 2];
+
+                    int best = 0;
+                    int best_score = (r * r + g * g + b * b) * 2;
+                    for (int p = 0; p < palette_size * 3; p += 3)
+                    {
+                        const int* pico8_color = pico8_palette + p;
+                        if (pico8_color[0] == r &&
+                            pico8_color[1] == g &&
+                            pico8_color[2] == b)
+                        {
+                            // Perfect match
+                            best = p;
+                            break;
+                        }
+                        int ri = pico8_color[0] - r;
+                        int gi = pico8_color[1] - g;
+                        int bi = pico8_color[2] - b;
+                        int score = ri * ri + gi * gi + bi * bi;
+                        if (score < best_score)
+                        {
+                            best_score = score;
+                            best = p;
+                        }
+                    }
+
+                    dst8[dstk + 0] = pico8_palette[best + 0];
+                    dst8[dstk + 1] = pico8_palette[best + 1];
+                    dst8[dstk + 2] = pico8_palette[best + 2];
+                    dst8[dstk + 3] = 255;
+                }
+            }
+            SDL_UnlockTexture(render_target);
+        }
+#elif PICO8 || CGA
+        void* dst;
+        const unsigned char* src = doom_get_framebuffer(3);
+        int src_pitch = WIDTH * 3;
+        int dst_pitch;
+#if CGA
+        const int palette_size = 16;
+        const int pico8_palette[16 * 3] = {
+            0, 0, 0,
+            0, 0, 0xAA,
+            0, 0xAA, 0,
+            0, 0xAA, 0xAA,
+            0xAA, 0, 0,
+            0xAA, 0, 0xAA,
+            0xAA, 0x55, 0,
+            0xAA, 0xAA, 0xAA,
+            0x55, 0x55, 0x55,
+            0x55, 0x55, 0xFF,
+            0x55, 0xFF, 0x55,
+            0x55, 0xFF, 0xFF,
+            0xFF, 0x55, 0x55,
+            0xFF, 0x55, 0xFF,
+            0xFF, 0xFF, 0x55,
+            0xFF, 0xFF, 0xFF
+        };
+#elif PICO8
+        const int palette_size = 16;
+        const int pico8_palette[16 * 3] = {
+            0, 0, 0,
+            29, 43, 83,
+            126, 37, 83,
+            0, 135, 81,
+            171, 82, 54,
+            95, 87, 79,
+            194, 195, 199,
+            255, 241, 232,
+            255, 0, 77,
+            255, 163, 0,
+            255, 236, 39,
+            0, 228, 54,
+            41, 173, 255,
+            131, 118, 156,
+            255, 119, 168,
+            255, 204, 170
+        };
+#endif
+        if (!SDL_LockTexture(render_target, NULL, &dst, &dst_pitch))
+        {
+            unsigned char* dst8 = (unsigned char*)dst;
+            for (int y = 0; y < HEIGHT; ++y)
+            {
+                for (int x = 0; x < WIDTH; ++x)
+                {
+                    int dstk = y * dst_pitch + x * 4;
+                    int srck = y * src_pitch + x * 3;
+
+                    int r = src[srck + 0];
+                    int g = src[srck + 1];
+                    int b = src[srck + 2];
+
+                    int best = 0;
+                    int best_score = (r * r + g * g + b * b) * 2;
+                    for (int p = 0; p < palette_size * 3; p += 3)
+                    {
+                        const int* pico8_color = pico8_palette + p;
+                        if (pico8_color[0] == r &&
+                            pico8_color[1] == g &&
+                            pico8_color[2] == b)
+                        {
+                            // Perfect match
+                            best = p;
+                            break;
+                        }
+                        int ri = pico8_color[0] - r;
+                        int gi = pico8_color[1] - g;
+                        int bi = pico8_color[2] - b;
+                        int score = ri * ri + gi * gi + bi * bi;
+                        if (score < best_score)
+                        {
+                            best_score = score;
+                            best = p;
+                        }
+                    }
+
+                    dst8[dstk + 0] = pico8_palette[best + 0];
+                    dst8[dstk + 1] = pico8_palette[best + 1];
+                    dst8[dstk + 2] = pico8_palette[best + 2];
+                    dst8[dstk + 3] = 255;
+                }
+            }
+            SDL_UnlockTexture(render_target);
+        }
+#else
         void* dst;
         const unsigned char* src = doom_get_framebuffer(4);
         int src_pitch = WIDTH * 4;
@@ -330,6 +487,7 @@ int main(int argc, char** argv)
             }
             SDL_UnlockTexture(render_target);
         }
+#endif
 
         // Stretch our texture on the screen
         SDL_Rect src_rect = {0, 0, WIDTH, HEIGHT };

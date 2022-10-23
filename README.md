@@ -31,6 +31,7 @@ See end of file for license information.
 - Wipe screen freezes menu
 - Use floats instead of fixed_t
 - French and german
+- Full color mode (Don't use COLORMAPS, use full 24 bits RGB)
 
 ## Usage
 Call `doom_init()`, then call `doom_update()` every frame, or as often as you can. This will run DOOM, without any video, inputs, sounds or music.

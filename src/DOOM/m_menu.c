@@ -1882,8 +1882,13 @@ doom_boolean M_Responder(event_t* ev)
                 S_StartSound(0, sfx_swtchn);
                 return true;
 
-            case KEY_F5:            // Detail toggle
-                M_ChangeDetail(0);
+            // case KEY_F5:            // Detail toggle
+            //     M_ChangeDetail(0);
+            //     S_StartSound(0, sfx_swtchn);
+            //     return true;
+
+            case KEY_F5:            // Crosshair toggle
+                M_ChangeCrosshair(0);
                 S_StartSound(0, sfx_swtchn);
                 return true;
 

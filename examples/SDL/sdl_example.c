@@ -13,7 +13,7 @@
 
 #if 0 // Use the PureDOOM.h single header
 #define DOOM_IMPLEMENTATION
-#include "../PureDOOM.h"
+#include "../../PureDOOM.h"
 #else
 #include "DOOM/DOOM.h"
 #endif

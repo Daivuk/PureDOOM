@@ -35,12 +35,6 @@ class File:
         return self.name + " -> " + str(self.headers)
 
 
-def concat_file(filename:str):
-    global final
-    with open(filename, "r") as file:
-        file.read()
-
-
 # Collect headers
 headers = glob.glob(r'../src/DOOM/*.h')
 for header in headers:

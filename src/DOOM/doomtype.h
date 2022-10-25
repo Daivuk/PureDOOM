@@ -28,10 +28,14 @@
 #ifdef __cplusplus
 typedef bool doom_boolean;
 #else
+#if !defined(false) && !defined(true)
 typedef enum
 {
     false, true
 } doom_boolean;
+#else
+typedef int doom_boolean;
+#endif
 #endif
 
 

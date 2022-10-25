@@ -23,8 +23,8 @@
 #define __R_STATE__
 
 
-// Need data structure definitions.
-#include "d_player.h"
+#include "d_player.h" // Need data structure definitions.
+#include "r_defs.h"
 
 
 //

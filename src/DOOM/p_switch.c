@@ -360,7 +360,7 @@ doom_boolean P_UseSpecialLine(mobj_t* thing, line_t* line, int side)
 
         case 29:
             // Raise Door
-            if (EV_DoDoor(line, normal))
+            if (EV_DoDoor(line, door_normal))
                 P_ChangeSwitchTexture(line, 0);
             break;
 
@@ -384,7 +384,7 @@ doom_boolean P_UseSpecialLine(mobj_t* thing, line_t* line, int side)
 
         case 50:
             // Close Door
-            if (EV_DoDoor(line, close))
+            if (EV_DoDoor(line, door_close))
                 P_ChangeSwitchTexture(line, 0);
             break;
 
@@ -414,7 +414,7 @@ doom_boolean P_UseSpecialLine(mobj_t* thing, line_t* line, int side)
 
         case 103:
             // Open Door
-            if (EV_DoDoor(line, open))
+            if (EV_DoDoor(line, door_open))
                 P_ChangeSwitchTexture(line, 0);
             break;
 
@@ -473,7 +473,7 @@ doom_boolean P_UseSpecialLine(mobj_t* thing, line_t* line, int side)
             // BUTTONS
         case 42:
             // Close Door
-            if (EV_DoDoor(line, close))
+            if (EV_DoDoor(line, door_close))
                 P_ChangeSwitchTexture(line, 1);
             break;
 
@@ -497,7 +497,7 @@ doom_boolean P_UseSpecialLine(mobj_t* thing, line_t* line, int side)
 
         case 61:
             // Open Door
-            if (EV_DoDoor(line, open))
+            if (EV_DoDoor(line, door_open))
                 P_ChangeSwitchTexture(line, 1);
             break;
 
@@ -509,7 +509,7 @@ doom_boolean P_UseSpecialLine(mobj_t* thing, line_t* line, int side)
 
         case 63:
             // Raise Door
-            if (EV_DoDoor(line, normal))
+            if (EV_DoDoor(line, door_normal))
                 P_ChangeSwitchTexture(line, 1);
             break;
 

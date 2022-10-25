@@ -247,10 +247,10 @@ void P_ActivateInStasis(int tag);
 //
 typedef enum
 {
-    normal,
+    door_normal,
     close30ThenOpen,
-    close,
-    open,
+    door_close,
+    door_open,
     raiseIn5Mins,
     blazeRaise,
     blazeOpen,

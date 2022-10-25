@@ -37,6 +37,7 @@ class File:
 
 # Collect headers
 headers = glob.glob(r'../src/DOOM/*.h')
+headers.sort() # To make it predictable
 for header in headers:
     if header.endswith("DOOM.h") or header.endswith("d_french.h"):
         continue # We'll do that one manually later, and first
@@ -44,6 +45,7 @@ for header in headers:
 
 # Collect code files
 codes = glob.glob(r'../src/DOOM/*.c')
+codes.sort() # To make it predictable
 for code in codes:
     code_files.append(File(code))
 

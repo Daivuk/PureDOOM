@@ -23,6 +23,9 @@
 #define __P_SAVEG__
 
 
+#include "doomtype.h"
+
+
 // Persistent storage/archiving.
 // These are the load / save game routines.
 void P_ArchivePlayers(void);

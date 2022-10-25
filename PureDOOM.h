@@ -214,523 +214,6 @@ void doom_mouse_move(int delta_x, int delta_y);
 #endif
 
 #endif
-#ifndef __DOOMDEF__
-#define __DOOMDEF__
-
-
-
-
-
-
-//
-// Global parameters/defines.
-//
-// DOOM version
-enum
-{
-    VERSION = 110
-};
-
-
-// Game mode handling - identify IWAD version
-//  to handle IWAD dependend animations etc.
-typedef enum
-{
-    shareware,      // DOOM 1 shareware, E1, M9
-    registered,     // DOOM 1 registered, E3, M27
-    commercial,     // DOOM 2 retail, E1 M34
-    // DOOM 2 german edition not handled
-    retail,         // DOOM 1 retail, E4, M36
-    indetermined    // Well, no IWAD found.
-} GameMode_t;
-
-
-// Mission packs - might be useful for TC stuff?
-typedef enum
-{
-    doom,       // DOOM 1
-    doom2,      // DOOM 2
-    pack_tnt,   // TNT mission pack
-    pack_plut,  // Plutonia pack
-    none
-} GameMission_t;
-
-
-// Identify language to use, software localization.
-typedef enum
-{
-    english,
-    french,
-    german,
-    unknown
-} Language_t;
-
-
-// If rangecheck is undefined,
-// most parameter validation debugging code will not be compiled
-#define RANGECHECK
-
-//
-// For resize of screen, at start of game.
-// It will not work dynamically, see visplanes.
-//
-#define BASE_WIDTH 320
-
-// It is educational but futile to change this
-//  scaling e.g. to 2. Drawing of status bar,
-//  menues etc. is tied to the scale implied
-//  by the graphics.
-#define SCREEN_MUL 1
-#define INV_ASPECT_RATIO 0.625 // 0.75, ideally
-
-// Defines suck. C sucks.
-// C++ might sucks for OOP, but it sure is a better C.
-// So there.
-// extern int SCREENWIDTH;
-#define SCREENWIDTH 320
-#define SCREENHEIGHT 200
-
-// The maximum number of players, multiplayer/networking.
-#define MAXPLAYERS 4
-
-// State updates, number of tics / second.
-#if defined(DOOM_FAST_TICK)
-#define TICKMUL 2
-#else
-#define TICKMUL 1
-#endif
-#define TICRATE (35 * TICKMUL)
-
-
-// The current state of the game: whether we are
-// playing, gazing at the intermission screen,
-// the game final animation, or a demo. 
-typedef enum
-{
-    GS_LEVEL,
-    GS_INTERMISSION,
-    GS_FINALE,
-    GS_DEMOSCREEN
-} gamestate_t;
-
-
-//
-// Difficulty/skill settings/filters.
-//
-
-// Skill flags.
-#define MTF_EASY    1
-#define MTF_NORMAL  2
-#define MTF_HARD    4
-
-// Deaf monsters/do not react to sound.
-#define MTF_AMBUSH  8
-
-
-typedef enum
-{
-    sk_baby,
-    sk_easy,
-    sk_medium,
-    sk_hard,
-    sk_nightmare
-} skill_t;
-
-
-//
-// Key cards.
-//
-typedef enum
-{
-    it_bluecard,
-    it_yellowcard,
-    it_redcard,
-    it_blueskull,
-    it_yellowskull,
-    it_redskull,
-    NUMCARDS
-} card_t;
-
-
-// The defined weapons,
-// including a marker indicating
-// user has not changed weapon.
-typedef enum
-{
-    wp_fist,
-    wp_pistol,
-    wp_shotgun,
-    wp_chaingun,
-    wp_missile,
-    wp_plasma,
-    wp_bfg,
-    wp_chainsaw,
-    wp_supershotgun,
-    NUMWEAPONS,
-    // No pending weapon change.
-    wp_nochange
-} weapontype_t;
-
-
-// Ammunition types defined.
-typedef enum
-{
-    am_clip,    // Pistol / chaingun ammo.
-    am_shell,   // Shotgun / double barreled shotgun.
-    am_cell,    // Plasma rifle, BFG.
-    am_misl,    // Missile launcher.
-    NUMAMMO,
-    am_noammo   // Unlimited for chainsaw / fist.        
-} ammotype_t;
-
-
-// Power up artifacts.
-typedef enum
-{
-    pw_invulnerability,
-    pw_strength,
-    pw_invisibility,
-    pw_ironfeet,
-    pw_allmap,
-    pw_infrared,
-    NUMPOWERS
-} powertype_t;
-
-
-//
-// Power up durations,
-//  how many seconds till expiration,
-//  assuming TICRATE is 35 ticks/second.
-//
-typedef enum
-{
-    INVULNTICS = (30 * TICRATE),
-    INVISTICS = (60 * TICRATE),
-    INFRATICS = (120 * TICRATE),
-    IRONTICS = (60 * TICRATE)
-} powerduration_t;
-
-
-//
-// DOOM keyboard definition.
-// This is the stuff configured by Setup.Exe.
-// Most key data are simple ascii (uppercased).
-//
-#define KEY_RIGHTARROW  0xae
-#define KEY_LEFTARROW   0xac
-#define KEY_UPARROW     0xad
-#define KEY_DOWNARROW   0xaf
-#define KEY_ESCAPE      27
-#define KEY_ENTER       13
-#define KEY_TAB         9
-#define KEY_F1          (0x80+0x3b)
-#define KEY_F2          (0x80+0x3c)
-#define KEY_F3          (0x80+0x3d)
-#define KEY_F4          (0x80+0x3e)
-#define KEY_F5          (0x80+0x3f)
-#define KEY_F6          (0x80+0x40)
-#define KEY_F7          (0x80+0x41)
-#define KEY_F8          (0x80+0x42)
-#define KEY_F9          (0x80+0x43)
-#define KEY_F10         (0x80+0x44)
-#define KEY_F11         (0x80+0x57)
-#define KEY_F12         (0x80+0x58)
-
-#define KEY_BACKSPACE   127
-#define KEY_PAUSE       0xff
-
-#define KEY_EQUALS      0x3d
-#define KEY_MINUS       0x2d
-
-#define KEY_RSHIFT      (0x80+0x36)
-#define KEY_RCTRL       (0x80+0x1d)
-#define KEY_RALT        (0x80+0x38)
-
-#define KEY_LALT        KEY_RALT
-
-
-#endif          // __DOOMDEF__
-
-
-#ifndef __DOOMTYPE__
-#define __DOOMTYPE__
-
-
-// Fixed to use builtin bool type with C++.
-#ifdef __cplusplus
-typedef bool doom_boolean;
-#else
-typedef enum
-{
-    false, true
-} doom_boolean;
-#endif
-
-
-typedef unsigned char byte;
-
-
-#define DOOM_MAXCHAR    ((char)0x7f)
-#define DOOM_MAXSHORT   ((short)0x7fff)
-
-// Max pos 32-bit int.
-#define DOOM_MAXINT     ((int)0x7fffffff)        
-#define DOOM_MAXLONG    ((long)0x7fffffff)
-#define DOOM_MINCHAR    ((char)0x80)
-#define DOOM_MINSHORT   ((short)0x8000)
-
-// Max negative 32-bit integer.
-#define DOOM_MININT     ((int)0x80000000)        
-#define DOOM_MINLONG    ((long)0x80000000)
-
-
-#endif
-
-
-#ifndef __DOOMDATA__
-#define __DOOMDATA__
-
-
-// The most basic types we use, portability.
-//#include "doomtype.h"
-
-// Some global defines, that configure the game.
-//#include "doomdef.h"
-
-
-//
-// Map level types.
-// The following data structures define the persistent format
-// used in the lumps of the WAD files.
-//
-
-// Lump order in a map WAD: each map needs a couple of lumps
-// to provide a complete scene geometry description.
-enum
-{
-    ML_LABEL,       // A separator, name, ExMx or MAPxx
-    ML_THINGS,      // Monsters, items..
-    ML_LINEDEFS,    // LineDefs, from editing
-    ML_SIDEDEFS,    // SideDefs, from editing
-    ML_VERTEXES,    // Vertices, edited and BSP splits generated
-    ML_SEGS,        // LineSegs, from LineDefs split by BSP
-    ML_SSECTORS,    // SubSectors, list of LineSegs
-    ML_NODES,       // BSP nodes
-    ML_SECTORS,     // Sectors, from editing
-    ML_REJECT,      // LUT, sector-sector visibility        
-    ML_BLOCKMAP     // LUT, motion clipping, walls/grid element
-};
-
-
-// A single Vertex.
-typedef struct
-{
-    short x;
-    short y;
-} mapvertex_t;
-
-
-// A SideDef, defining the visual appearance of a wall,
-// by setting textures and offsets.
-typedef struct
-{
-    short textureoffset;
-    short rowoffset;
-    char toptexture[8];
-    char bottomtexture[8];
-    char midtexture[8];
-    // Front sector, towards viewer.
-    short sector;
-} mapsidedef_t;
-
-
-// A LineDef, as used for editing, and as input
-// to the BSP builder.
-typedef struct
-{
-    short v1;
-    short v2;
-    short flags;
-    short special;
-    short tag;
-    // sidenum[1] will be -1 if one sided
-    short sidenum[2];
-} maplinedef_t;
-
-
-//
-// LineDef attributes.
-//
-
-// Solid, is an obstacle.
-#define ML_BLOCKING 1
-
-// Blocks monsters only.
-#define ML_BLOCKMONSTERS 2
-
-// Backside will not be present at all
-//  if not two sided.
-#define ML_TWOSIDED 4
-
-// If a texture is pegged, the texture will have
-// the end exposed to air held constant at the
-// top or bottom of the texture (stairs or pulled
-// down things) and will move with a height change
-// of one of the neighbor sectors.
-// Unpegged textures allways have the first row of
-// the texture at the top pixel of the line for both
-// top and bottom textures (use next to windows).
-
-// upper texture unpegged
-#define ML_DONTPEGTOP 8
-
-// lower texture unpegged
-#define ML_DONTPEGBOTTOM 16        
-
-// In AutoMap: don't map as two sided: IT'S A SECRET!
-#define ML_SECRET 32
-
-// Sound rendering: don't let sound cross two of these.
-#define ML_SOUNDBLOCK 64
-
-// Don't draw on the automap at all.
-#define ML_DONTDRAW 128
-
-// Set if already seen, thus drawn in automap.
-#define ML_MAPPED 256
-
-
-// Sector definition, from editing.
-typedef struct
-{
-    short floorheight;
-    short ceilingheight;
-    char floorpic[8];
-    char ceilingpic[8];
-    short lightlevel;
-    short special;
-    short tag;
-} mapsector_t;
-
-
-// SubSector, as generated by BSP.
-typedef struct
-{
-    short numsegs;
-    // Index of first one, segs are stored sequentially.
-    short firstseg;
-} mapsubsector_t;
-
-
-// LineSeg, generated by splitting LineDefs
-// using partition lines selected by BSP builder.
-typedef struct
-{
-    short v1;
-    short v2;
-    short angle;
-    short linedef;
-    short side;
-    short offset;
-} mapseg_t;
-
-
-//
-// BSP node structure.
-//
-
-// Indicate a leaf.
-#define NF_SUBSECTOR 0x8000
-
-typedef struct
-{
-    // Partition line from (x,y) to x+dx,y+dy)
-    short x;
-    short y;
-    short dx;
-    short dy;
-
-    // Bounding box for each child,
-    // clip against view frustum.
-    short bbox[2][4];
-
-    // If NF_SUBSECTOR its a subsector,
-    // else it's a node of another subtree.
-    unsigned short children[2];
-} mapnode_t;
-
-
-// Thing definition, position, orientation and type,
-// plus skill/visibility flags and attributes.
-typedef struct
-{
-    short x;
-    short y;
-    short angle;
-    short type;
-    short options;
-} mapthing_t;
-
-
-#endif // __DOOMDATA__
-
-
-#ifndef __DOOM_CONFIG_H__
-#define __DOOM_CONFIG_H__
-
-
-#if defined(WIN32)
-#define DOOM_WIN32
-#elif defined(__APPLE__)
-#define DOOM_APPLE
-#else
-#define DOOM_LINUX
-#endif
-
-
-//#include "DOOM.h"
-
-
-#define doom_abs(x) ((x) < 0 ? -(x) : (x))
-
-
-extern char error_buf[260];
-extern int doom_flags;
-extern doom_print_fn doom_print;
-extern doom_malloc_fn doom_malloc;
-extern doom_free_fn doom_free;
-extern doom_open_fn doom_open;
-extern doom_close_fn doom_close;
-extern doom_read_fn doom_read;
-extern doom_write_fn doom_write;
-extern doom_seek_fn doom_seek;
-extern doom_tell_fn doom_tell;
-extern doom_eof_fn doom_eof;
-extern doom_gettime_fn doom_gettime;
-extern doom_exit_fn doom_exit;
-extern doom_getenv_fn doom_getenv;
-
-
-const char* doom_itoa(int i, int radix);
-const char* doom_ctoa(char c);
-const char* doom_ptoa(void* p);
-void doom_memset(void* ptr, int value, int num);
-void* doom_memcpy(void* destination, const void* source, int num);
-int doom_fprint(void* handle, const char* str);
-int doom_strlen(const char* str);
-char* doom_concat(char* dst, const char* src);
-char* doom_strcpy(char* destination, const char* source);
-char* doom_strncpy(char* destination, const char* source, int num);
-int doom_strcmp(const char* str1, const char* str2);
-int doom_strncmp(const char* str1, const char* str2, int n);
-int doom_strcasecmp(const char* str1, const char* str2);
-int doom_strncasecmp(const char* str1, const char* str2, int n);
-int doom_atoi(const char* str);
-int doom_atox(const char* str);
-int doom_toupper(int c);
-
-
-#endif
 #ifndef __D_ENGLSH__
 #define __D_ENGLSH__
 
@@ -1404,39 +887,399 @@ int doom_toupper(int c);
 #endif
 
 
-#ifndef __DSTRINGS__
-#define __DSTRINGS__
+#ifndef __D_THINK__
+#define __D_THINK__
 
 
-// All important printed strings.
-// Language selection (message strings).
-// Use -DFRENCH etc.
+//
+// Experimental stuff.
+// To compile this as "ANSI C with classes"
+//  we will need to handle the various
+//  action functions cleanly.
+//
+typedef void (*actionf_v)();
+typedef void (*actionf_p1)(void*);
+typedef void (*actionf_p2)(void*, void*);
 
-#ifdef FRENCH
-//#include  "d_french.h" // Leave the extra space there, to throw off regex in PureDOOM.h creation
-#else
-//#include "d_englsh.h"
+typedef union
+{
+    actionf_p1 acp1;
+    actionf_v  acv;
+    actionf_p2 acp2;
+} actionf_t;
+
+
+// Historically, "think_t" is yet another
+//  function pointer to a routine to handle
+//  an actor.
+typedef actionf_t think_t;
+
+
+// Doubly linked list of actors.
+typedef struct thinker_s
+{
+    struct thinker_s* prev;
+    struct thinker_s* next;
+    think_t function;
+} thinker_t;
+
+
 #endif
 
 
-// Misc. other strings.
-#define SAVEGAMENAME "doomsav"
+#ifndef __DOOM_CONFIG_H__
+#define __DOOM_CONFIG_H__
+
+
+#if defined(WIN32)
+#define DOOM_WIN32
+#elif defined(__APPLE__)
+#define DOOM_APPLE
+#else
+#define DOOM_LINUX
+#endif
+
+
+//#include "DOOM.h"
+
+
+#define doom_abs(x) ((x) < 0 ? -(x) : (x))
+
+
+extern char error_buf[260];
+extern int doom_flags;
+extern doom_print_fn doom_print;
+extern doom_malloc_fn doom_malloc;
+extern doom_free_fn doom_free;
+extern doom_open_fn doom_open;
+extern doom_close_fn doom_close;
+extern doom_read_fn doom_read;
+extern doom_write_fn doom_write;
+extern doom_seek_fn doom_seek;
+extern doom_tell_fn doom_tell;
+extern doom_eof_fn doom_eof;
+extern doom_gettime_fn doom_gettime;
+extern doom_exit_fn doom_exit;
+extern doom_getenv_fn doom_getenv;
+
+
+const char* doom_itoa(int i, int radix);
+const char* doom_ctoa(char c);
+const char* doom_ptoa(void* p);
+void doom_memset(void* ptr, int value, int num);
+void* doom_memcpy(void* destination, const void* source, int num);
+int doom_fprint(void* handle, const char* str);
+int doom_strlen(const char* str);
+char* doom_concat(char* dst, const char* src);
+char* doom_strcpy(char* destination, const char* source);
+char* doom_strncpy(char* destination, const char* source, int num);
+int doom_strcmp(const char* str1, const char* str2);
+int doom_strncmp(const char* str1, const char* str2, int n);
+int doom_strcasecmp(const char* str1, const char* str2);
+int doom_strncasecmp(const char* str1, const char* str2, int n);
+int doom_atoi(const char* str);
+int doom_atox(const char* str);
+int doom_toupper(int c);
+
+
+#endif
+#ifndef __DOOMDEF__
+#define __DOOMDEF__
+
+
+
+
+
 
 //
-// File locations,
-//  relative to current position.
-// Path names are OS-sensitive.
+// Global parameters/defines.
 //
-#define DEVMAPS "devmaps"
-#define DEVDATA "devdata"
-
-// Not done in french?
-
-// QuitDOOM messages
-#define NUM_QUITMESSAGES   22
+// DOOM version
+enum
+{
+    VERSION = 110
+};
 
 
-extern char* endmsg[];
+// Game mode handling - identify IWAD version
+//  to handle IWAD dependend animations etc.
+typedef enum
+{
+    shareware,      // DOOM 1 shareware, E1, M9
+    registered,     // DOOM 1 registered, E3, M27
+    commercial,     // DOOM 2 retail, E1 M34
+    // DOOM 2 german edition not handled
+    retail,         // DOOM 1 retail, E4, M36
+    indetermined    // Well, no IWAD found.
+} GameMode_t;
+
+
+// Mission packs - might be useful for TC stuff?
+typedef enum
+{
+    doom,       // DOOM 1
+    doom2,      // DOOM 2
+    pack_tnt,   // TNT mission pack
+    pack_plut,  // Plutonia pack
+    none
+} GameMission_t;
+
+
+// Identify language to use, software localization.
+typedef enum
+{
+    english,
+    french,
+    german,
+    unknown
+} Language_t;
+
+
+// If rangecheck is undefined,
+// most parameter validation debugging code will not be compiled
+#define RANGECHECK
+
+//
+// For resize of screen, at start of game.
+// It will not work dynamically, see visplanes.
+//
+#define BASE_WIDTH 320
+
+// It is educational but futile to change this
+//  scaling e.g. to 2. Drawing of status bar,
+//  menues etc. is tied to the scale implied
+//  by the graphics.
+#define SCREEN_MUL 1
+#define INV_ASPECT_RATIO 0.625 // 0.75, ideally
+
+// Defines suck. C sucks.
+// C++ might sucks for OOP, but it sure is a better C.
+// So there.
+// extern int SCREENWIDTH;
+#define SCREENWIDTH 320
+#define SCREENHEIGHT 200
+
+// The maximum number of players, multiplayer/networking.
+#define MAXPLAYERS 4
+
+// State updates, number of tics / second.
+#if defined(DOOM_FAST_TICK)
+#define TICKMUL 2
+#else
+#define TICKMUL 1
+#endif
+#define TICRATE (35 * TICKMUL)
+
+
+// The current state of the game: whether we are
+// playing, gazing at the intermission screen,
+// the game final animation, or a demo. 
+typedef enum
+{
+    GS_LEVEL,
+    GS_INTERMISSION,
+    GS_FINALE,
+    GS_DEMOSCREEN
+} gamestate_t;
+
+
+//
+// Difficulty/skill settings/filters.
+//
+
+// Skill flags.
+#define MTF_EASY    1
+#define MTF_NORMAL  2
+#define MTF_HARD    4
+
+// Deaf monsters/do not react to sound.
+#define MTF_AMBUSH  8
+
+
+typedef enum
+{
+    sk_baby,
+    sk_easy,
+    sk_medium,
+    sk_hard,
+    sk_nightmare
+} skill_t;
+
+
+//
+// Key cards.
+//
+typedef enum
+{
+    it_bluecard,
+    it_yellowcard,
+    it_redcard,
+    it_blueskull,
+    it_yellowskull,
+    it_redskull,
+    NUMCARDS
+} card_t;
+
+
+// The defined weapons,
+// including a marker indicating
+// user has not changed weapon.
+typedef enum
+{
+    wp_fist,
+    wp_pistol,
+    wp_shotgun,
+    wp_chaingun,
+    wp_missile,
+    wp_plasma,
+    wp_bfg,
+    wp_chainsaw,
+    wp_supershotgun,
+    NUMWEAPONS,
+    // No pending weapon change.
+    wp_nochange
+} weapontype_t;
+
+
+// Ammunition types defined.
+typedef enum
+{
+    am_clip,    // Pistol / chaingun ammo.
+    am_shell,   // Shotgun / double barreled shotgun.
+    am_cell,    // Plasma rifle, BFG.
+    am_misl,    // Missile launcher.
+    NUMAMMO,
+    am_noammo   // Unlimited for chainsaw / fist.        
+} ammotype_t;
+
+
+// Power up artifacts.
+typedef enum
+{
+    pw_invulnerability,
+    pw_strength,
+    pw_invisibility,
+    pw_ironfeet,
+    pw_allmap,
+    pw_infrared,
+    NUMPOWERS
+} powertype_t;
+
+
+//
+// Power up durations,
+//  how many seconds till expiration,
+//  assuming TICRATE is 35 ticks/second.
+//
+typedef enum
+{
+    INVULNTICS = (30 * TICRATE),
+    INVISTICS = (60 * TICRATE),
+    INFRATICS = (120 * TICRATE),
+    IRONTICS = (60 * TICRATE)
+} powerduration_t;
+
+
+//
+// DOOM keyboard definition.
+// This is the stuff configured by Setup.Exe.
+// Most key data are simple ascii (uppercased).
+//
+#define KEY_RIGHTARROW  0xae
+#define KEY_LEFTARROW   0xac
+#define KEY_UPARROW     0xad
+#define KEY_DOWNARROW   0xaf
+#define KEY_ESCAPE      27
+#define KEY_ENTER       13
+#define KEY_TAB         9
+#define KEY_F1          (0x80+0x3b)
+#define KEY_F2          (0x80+0x3c)
+#define KEY_F3          (0x80+0x3d)
+#define KEY_F4          (0x80+0x3e)
+#define KEY_F5          (0x80+0x3f)
+#define KEY_F6          (0x80+0x40)
+#define KEY_F7          (0x80+0x41)
+#define KEY_F8          (0x80+0x42)
+#define KEY_F9          (0x80+0x43)
+#define KEY_F10         (0x80+0x44)
+#define KEY_F11         (0x80+0x57)
+#define KEY_F12         (0x80+0x58)
+
+#define KEY_BACKSPACE   127
+#define KEY_PAUSE       0xff
+
+#define KEY_EQUALS      0x3d
+#define KEY_MINUS       0x2d
+
+#define KEY_RSHIFT      (0x80+0x36)
+#define KEY_RCTRL       (0x80+0x1d)
+#define KEY_RALT        (0x80+0x38)
+
+#define KEY_LALT        KEY_RALT
+
+
+#endif          // __DOOMDEF__
+
+
+#ifndef __D_ITEMS__
+#define __D_ITEMS__
+
+
+//#include "doomdef.h"
+
+
+// Weapon info: sprite frames, ammunition use.
+typedef struct
+{
+    ammotype_t ammo;
+    int upstate;
+    int downstate;
+    int readystate;
+    int atkstate;
+    int flashstate;
+} weaponinfo_t;
+
+
+extern weaponinfo_t weaponinfo[NUMWEAPONS];
+
+
+#endif
+
+
+#ifndef __DOOMTYPE__
+#define __DOOMTYPE__
+
+
+// Fixed to use builtin bool type with C++.
+#ifdef __cplusplus
+typedef bool doom_boolean;
+#else
+#if !defined(false) && !defined(true)
+typedef enum
+{
+    false, true
+} doom_boolean;
+#else
+typedef int doom_boolean;
+#endif
+#endif
+
+
+typedef unsigned char byte;
+
+
+#define DOOM_MAXCHAR    ((char)0x7f)
+#define DOOM_MAXSHORT   ((short)0x7fff)
+
+// Max pos 32-bit int.
+#define DOOM_MAXINT     ((int)0x7fffffff)        
+#define DOOM_MAXLONG    ((long)0x7fffffff)
+#define DOOM_MINCHAR    ((char)0x80)
+#define DOOM_MINSHORT   ((short)0x8000)
+
+// Max negative 32-bit integer.
+#define DOOM_MININT     ((int)0x80000000)        
+#define DOOM_MINLONG    ((long)0x80000000)
 
 
 #endif
@@ -1567,31 +1410,6 @@ void AM_Stop(void);
 #endif
 
 
-#ifndef __D_ITEMS__
-#define __D_ITEMS__
-
-
-//#include "doomdef.h"
-
-
-// Weapon info: sprite frames, ammunition use.
-typedef struct
-{
-    ammotype_t ammo;
-    int upstate;
-    int downstate;
-    int readystate;
-    int atkstate;
-    int flashstate;
-} weaponinfo_t;
-
-
-extern weaponinfo_t weaponinfo[NUMWEAPONS];
-
-
-#endif
-
-
 #ifndef __D_MAIN__
 #define __D_MAIN__
 
@@ -1650,46 +1468,6 @@ typedef struct
 #endif
 
 
-#ifndef __D_THINK__
-#define __D_THINK__
-
-
-//
-// Experimental stuff.
-// To compile this as "ANSI C with classes"
-//  we will need to handle the various
-//  action functions cleanly.
-//
-typedef void (*actionf_v)();
-typedef void (*actionf_p1)(void*);
-typedef void (*actionf_p2)(void*, void*);
-
-typedef union
-{
-    actionf_p1 acp1;
-    actionf_v  acv;
-    actionf_p2 acp2;
-} actionf_t;
-
-
-// Historically, "think_t" is yet another
-//  function pointer to a routine to handle
-//  an actor.
-typedef actionf_t think_t;
-
-
-// Doubly linked list of actors.
-typedef struct thinker_s
-{
-    struct thinker_s* prev;
-    struct thinker_s* next;
-    think_t function;
-} thinker_t;
-
-
-#endif
-
-
 #ifndef __D_TICCMD__
 #define __D_TICCMD__
 
@@ -1710,6 +1488,232 @@ typedef struct
     byte chatchar;
     byte buttons;
 } ticcmd_t;
+
+
+#endif
+
+
+#ifndef __DOOMDATA__
+#define __DOOMDATA__
+
+
+// The most basic types we use, portability.
+//#include "doomtype.h"
+
+// Some global defines, that configure the game.
+//#include "doomdef.h"
+
+
+//
+// Map level types.
+// The following data structures define the persistent format
+// used in the lumps of the WAD files.
+//
+
+// Lump order in a map WAD: each map needs a couple of lumps
+// to provide a complete scene geometry description.
+enum
+{
+    ML_LABEL,       // A separator, name, ExMx or MAPxx
+    ML_THINGS,      // Monsters, items..
+    ML_LINEDEFS,    // LineDefs, from editing
+    ML_SIDEDEFS,    // SideDefs, from editing
+    ML_VERTEXES,    // Vertices, edited and BSP splits generated
+    ML_SEGS,        // LineSegs, from LineDefs split by BSP
+    ML_SSECTORS,    // SubSectors, list of LineSegs
+    ML_NODES,       // BSP nodes
+    ML_SECTORS,     // Sectors, from editing
+    ML_REJECT,      // LUT, sector-sector visibility        
+    ML_BLOCKMAP     // LUT, motion clipping, walls/grid element
+};
+
+
+// A single Vertex.
+typedef struct
+{
+    short x;
+    short y;
+} mapvertex_t;
+
+
+// A SideDef, defining the visual appearance of a wall,
+// by setting textures and offsets.
+typedef struct
+{
+    short textureoffset;
+    short rowoffset;
+    char toptexture[8];
+    char bottomtexture[8];
+    char midtexture[8];
+    // Front sector, towards viewer.
+    short sector;
+} mapsidedef_t;
+
+
+// A LineDef, as used for editing, and as input
+// to the BSP builder.
+typedef struct
+{
+    short v1;
+    short v2;
+    short flags;
+    short special;
+    short tag;
+    // sidenum[1] will be -1 if one sided
+    short sidenum[2];
+} maplinedef_t;
+
+
+//
+// LineDef attributes.
+//
+
+// Solid, is an obstacle.
+#define ML_BLOCKING 1
+
+// Blocks monsters only.
+#define ML_BLOCKMONSTERS 2
+
+// Backside will not be present at all
+//  if not two sided.
+#define ML_TWOSIDED 4
+
+// If a texture is pegged, the texture will have
+// the end exposed to air held constant at the
+// top or bottom of the texture (stairs or pulled
+// down things) and will move with a height change
+// of one of the neighbor sectors.
+// Unpegged textures allways have the first row of
+// the texture at the top pixel of the line for both
+// top and bottom textures (use next to windows).
+
+// upper texture unpegged
+#define ML_DONTPEGTOP 8
+
+// lower texture unpegged
+#define ML_DONTPEGBOTTOM 16        
+
+// In AutoMap: don't map as two sided: IT'S A SECRET!
+#define ML_SECRET 32
+
+// Sound rendering: don't let sound cross two of these.
+#define ML_SOUNDBLOCK 64
+
+// Don't draw on the automap at all.
+#define ML_DONTDRAW 128
+
+// Set if already seen, thus drawn in automap.
+#define ML_MAPPED 256
+
+
+// Sector definition, from editing.
+typedef struct
+{
+    short floorheight;
+    short ceilingheight;
+    char floorpic[8];
+    char ceilingpic[8];
+    short lightlevel;
+    short special;
+    short tag;
+} mapsector_t;
+
+
+// SubSector, as generated by BSP.
+typedef struct
+{
+    short numsegs;
+    // Index of first one, segs are stored sequentially.
+    short firstseg;
+} mapsubsector_t;
+
+
+// LineSeg, generated by splitting LineDefs
+// using partition lines selected by BSP builder.
+typedef struct
+{
+    short v1;
+    short v2;
+    short angle;
+    short linedef;
+    short side;
+    short offset;
+} mapseg_t;
+
+
+//
+// BSP node structure.
+//
+
+// Indicate a leaf.
+#define NF_SUBSECTOR 0x8000
+
+typedef struct
+{
+    // Partition line from (x,y) to x+dx,y+dy)
+    short x;
+    short y;
+    short dx;
+    short dy;
+
+    // Bounding box for each child,
+    // clip against view frustum.
+    short bbox[2][4];
+
+    // If NF_SUBSECTOR its a subsector,
+    // else it's a node of another subtree.
+    unsigned short children[2];
+} mapnode_t;
+
+
+// Thing definition, position, orientation and type,
+// plus skill/visibility flags and attributes.
+typedef struct
+{
+    short x;
+    short y;
+    short angle;
+    short type;
+    short options;
+} mapthing_t;
+
+
+#endif // __DOOMDATA__
+
+
+#ifndef __DSTRINGS__
+#define __DSTRINGS__
+
+
+// All important printed strings.
+// Language selection (message strings).
+// Use -DFRENCH etc.
+
+#ifdef FRENCH
+//#include  "d_french.h" // Leave the extra space there, to throw off regex in PureDOOM.h creation
+#else
+//#include "d_englsh.h"
+#endif
+
+
+// Misc. other strings.
+#define SAVEGAMENAME "doomsav"
+
+//
+// File locations,
+//  relative to current position.
+// Path names are OS-sensitive.
+//
+#define DEVMAPS "devmaps"
+#define DEVDATA "devdata"
+
+// Not done in french?
+
+// QuitDOOM messages
+#define NUM_QUITMESSAGES   22
+
+
+extern char* endmsg[];
 
 
 #endif
@@ -1861,6 +1865,111 @@ void HU_Ticker(void);
 void HU_Drawer(void);
 char HU_dequeueChatChar(void);
 void HU_Erase(void);
+
+
+#endif
+
+
+#ifndef __I_NET__
+#define __I_NET__
+
+
+// Called by D_DoomMain.
+
+void I_InitNetwork (void);
+void I_NetCmd (void);
+
+
+#endif
+
+
+#ifndef __I_SYSTEM__
+#define __I_SYSTEM__
+
+
+//#include "d_ticcmd.h"
+//#include "d_event.h"
+
+
+// Called by DoomMain.
+void I_Init(void);
+
+// Called by startup code
+// to get the ammount of memory to malloc
+// for the zone management.
+byte* I_ZoneBase(int* size);
+
+// Called by D_DoomLoop,
+// returns current time in tics.
+int I_GetTime(void);
+
+// Called by D_DoomLoop,
+// called before processing any tics in a frame
+// (just after displaying a frame).
+// Time consuming syncronous operations
+// are performed here (joystick reading).
+// Can call D_PostEvent.
+void I_StartFrame(void);
+
+// Called by D_DoomLoop,
+// called before processing each tic in a frame.
+// Quick syncronous operations are performed here.
+// Can call D_PostEvent.
+void I_StartTic(void);
+
+// Asynchronous interrupt functions should maintain private queues
+// that are read by the synchronous functions
+// to be converted into events.
+
+// Either returns a null ticcmd,
+// or calls a loadable driver to build it.
+// This ticcmd will then be modified by the gameloop
+// for normal input.
+ticcmd_t* I_BaseTiccmd(void);
+
+// Called by M_Responder when quit is selected.
+// Clean exit, displays sell blurb.
+void I_Quit(void);
+
+// Allocates from low memory under dos,
+// just mallocs under unix
+byte* I_AllocLow(int length);
+
+void I_Tactile(int on, int off, int total);
+
+void I_Error(char* error);
+
+
+#endif
+
+
+#ifndef __I_VIDEO__
+#define __I_VIDEO__
+
+
+//#include "doomtype.h"
+
+
+// Called by D_DoomMain,
+// determines the hardware configuration
+// and sets up the video mode
+void I_InitGraphics(void);
+
+void I_ShutdownGraphics(void);
+
+// Takes full 8 bit values.
+void I_SetPalette(byte* palette);
+
+void I_UpdateNoBlit(void);
+void I_FinishUpdate(void);
+
+// Wait for vertical retrace or pause a bit.
+void I_WaitVBL(int count);
+
+void I_ReadScreen(byte* scr);
+
+void I_BeginRead(void);
+void I_EndRead(void);
 
 
 #endif
@@ -3183,111 +3292,6 @@ extern mobjinfo_t mobjinfo[NUMMOBJTYPES];
 #endif
 
 
-#ifndef __I_NET__
-#define __I_NET__
-
-
-// Called by D_DoomMain.
-
-void I_InitNetwork (void);
-void I_NetCmd (void);
-
-
-#endif
-
-
-#ifndef __I_SYSTEM__
-#define __I_SYSTEM__
-
-
-//#include "d_ticcmd.h"
-//#include "d_event.h"
-
-
-// Called by DoomMain.
-void I_Init(void);
-
-// Called by startup code
-// to get the ammount of memory to malloc
-// for the zone management.
-byte* I_ZoneBase(int* size);
-
-// Called by D_DoomLoop,
-// returns current time in tics.
-int I_GetTime(void);
-
-// Called by D_DoomLoop,
-// called before processing any tics in a frame
-// (just after displaying a frame).
-// Time consuming syncronous operations
-// are performed here (joystick reading).
-// Can call D_PostEvent.
-void I_StartFrame(void);
-
-// Called by D_DoomLoop,
-// called before processing each tic in a frame.
-// Quick syncronous operations are performed here.
-// Can call D_PostEvent.
-void I_StartTic(void);
-
-// Asynchronous interrupt functions should maintain private queues
-// that are read by the synchronous functions
-// to be converted into events.
-
-// Either returns a null ticcmd,
-// or calls a loadable driver to build it.
-// This ticcmd will then be modified by the gameloop
-// for normal input.
-ticcmd_t* I_BaseTiccmd(void);
-
-// Called by M_Responder when quit is selected.
-// Clean exit, displays sell blurb.
-void I_Quit(void);
-
-// Allocates from low memory under dos,
-// just mallocs under unix
-byte* I_AllocLow(int length);
-
-void I_Tactile(int on, int off, int total);
-
-void I_Error(char* error);
-
-
-#endif
-
-
-#ifndef __I_VIDEO__
-#define __I_VIDEO__
-
-
-//#include "doomtype.h"
-
-
-// Called by D_DoomMain,
-// determines the hardware configuration
-// and sets up the video mode
-void I_InitGraphics(void);
-
-void I_ShutdownGraphics(void);
-
-// Takes full 8 bit values.
-void I_SetPalette(byte* palette);
-
-void I_UpdateNoBlit(void);
-void I_FinishUpdate(void);
-
-// Wait for vertical retrace or pause a bit.
-void I_WaitVBL(int count);
-
-void I_ReadScreen(byte* scr);
-
-void I_BeginRead(void);
-void I_EndRead(void);
-
-
-#endif
-
-
 #ifndef __M_ARGV__
 #define __M_ARGV__
 
@@ -3497,6 +3501,9 @@ unsigned long SwapLONG(unsigned long);
 #define __P_SAVEG__
 
 
+//#include "doomtype.h"
+
+
 // Persistent storage/archiving.
 // These are the load / save game routines.
 void P_ArchivePlayers(void);
@@ -3555,6 +3562,62 @@ extern int skytexturemid;
 
 // Called whenever the view size changes.
 void R_InitSkyMap(void);
+
+#endif
+
+
+#ifndef __S_SOUND__
+#define __S_SOUND__
+
+
+//
+// Initializes sound stuff, including volume
+// Sets channels, SFX and music volume,
+// allocates channel buffer, sets S_sfx lookup.
+//
+void S_Init(int sfxVolume, int musicVolume);
+
+//
+// Per level startup code.
+// Kills playing sounds at start of level,
+//  determines music if any, changes music.
+//
+void S_Start(void);
+
+//
+// Start sound for thing at <origin>
+//  using <sound_id> from sounds.h
+//
+void S_StartSound(void* origin, int sound_id);
+
+// Will start a sound at a given volume.
+void S_StartSoundAtVolume(void* origin, int sound_id, int volume);
+
+// Stop sound for thing at <origin>
+void S_StopSound(void* origin);
+
+// Start music using <music_id> from sounds.h
+void S_StartMusic(int music_id);
+
+// Start music using <music_id> from sounds.h,
+// and set whether looping
+void S_ChangeMusic(int music_id, int looping);
+
+// Stops the music fer sure.
+void S_StopMusic(void);
+
+// Stop and resume music, during game PAUSE.
+void S_PauseSound(void);
+void S_ResumeSound(void);
+
+//
+// Updates music & sounds
+//
+void S_UpdateSounds(void* listener);
+
+void S_SetMusicVolume(int volume);
+void S_SetSfxVolume(int volume);
+
 
 #endif
 
@@ -3874,62 +3937,6 @@ typedef enum
 
 
 doom_boolean ST_Responder(event_t* ev);
-
-#endif
-
-
-#ifndef __S_SOUND__
-#define __S_SOUND__
-
-
-//
-// Initializes sound stuff, including volume
-// Sets channels, SFX and music volume,
-// allocates channel buffer, sets S_sfx lookup.
-//
-void S_Init(int sfxVolume, int musicVolume);
-
-//
-// Per level startup code.
-// Kills playing sounds at start of level,
-//  determines music if any, changes music.
-//
-void S_Start(void);
-
-//
-// Start sound for thing at <origin>
-//  using <sound_id> from sounds.h
-//
-void S_StartSound(void* origin, int sound_id);
-
-// Will start a sound at a given volume.
-void S_StartSoundAtVolume(void* origin, int sound_id, int volume);
-
-// Stop sound for thing at <origin>
-void S_StopSound(void* origin);
-
-// Start music using <music_id> from sounds.h
-void S_StartMusic(int music_id);
-
-// Start music using <music_id> from sounds.h,
-// and set whether looping
-void S_ChangeMusic(int music_id, int looping);
-
-// Stops the music fer sure.
-void S_StopMusic(void);
-
-// Stop and resume music, during game PAUSE.
-void S_PauseSound(void);
-void S_ResumeSound(void);
-
-//
-// Updates music & sounds
-//
-void S_UpdateSounds(void* listener);
-
-void S_SetMusicVolume(int volume);
-void S_SetSfxVolume(int volume);
-
 
 #endif
 
@@ -5720,10 +5727,10 @@ void P_ActivateInStasis(int tag);
 //
 typedef enum
 {
-    normal,
+    door_normal,
     close30ThenOpen,
-    close,
-    open,
+    door_close,
+    door_open,
     raiseIn5Mins,
     blazeRaise,
     blazeOpen,
@@ -6035,8 +6042,8 @@ void R_RenderMaskedSegRange(drawseg_t* ds, int x1, int x2);
 #define __R_STATE__
 
 
-// Need data structure definitions.
-//#include "d_player.h"
+//#include "d_player.h" // Need data structure definitions.
+//#include "r_defs.h"
 
 
 //
@@ -6826,32 +6833,6 @@ void V_MarkRect(int x,
 #endif
 
 
-#ifndef __WI_STUFF__
-#define __WI_STUFF__
-
-//#include "doomdef.h"
-
-// States for the intermission
-typedef enum
-{
-    NoState = -1,
-    StatCount,
-    ShowNextLoc
-} stateenum_t;
-
-// Called by main loop, animate the intermission.
-void WI_Ticker(void);
-
-// Called by main loop,
-// draws the intermission directly into the screen buffer.
-void WI_Drawer(void);
-
-// Setup for an intermission screen.
-void WI_Start(wbstartstruct_t* wbstartstruct);
-
-#endif
-
-
 #ifndef __W_WAD__
 #define __W_WAD__
 
@@ -6904,6 +6885,32 @@ void W_ReadLump(int lump, void* dest);
 void* W_CacheLumpNum(int lump, int tag);
 void* W_CacheLumpName(char* name, int tag);
 
+
+#endif
+
+
+#ifndef __WI_STUFF__
+#define __WI_STUFF__
+
+//#include "doomdef.h"
+
+// States for the intermission
+typedef enum
+{
+    NoState = -1,
+    StatCount,
+    ShowNextLoc
+} stateenum_t;
+
+// Called by main loop, animate the intermission.
+void WI_Ticker(void);
+
+// Called by main loop,
+// draws the intermission directly into the screen buffer.
+void WI_Drawer(void);
+
+// Setup for an intermission screen.
+void WI_Start(wbstartstruct_t* wbstartstruct);
 
 #endif
 

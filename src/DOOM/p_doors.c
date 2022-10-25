@@ -58,7 +58,7 @@ void T_VerticalDoor(vldoor_t* door)
                                      sfx_bdcls);
                         break;
 
-                    case normal:
+                    case door_normal:
                         door->direction = -1; // time to go back down
                         S_StartSound((mobj_t*)&door->sector->soundorg,
                                      sfx_dorcls);
@@ -84,7 +84,7 @@ void T_VerticalDoor(vldoor_t* door)
                 {
                     case raiseIn5Mins:
                         door->direction = 1;
-                        door->type = normal;
+                        door->type = door_normal;
                         S_StartSound((mobj_t*)&door->sector->soundorg,
                                      sfx_doropn);
                         break;
@@ -113,8 +113,8 @@ void T_VerticalDoor(vldoor_t* door)
                                      sfx_bdcls);
                         break;
 
-                    case normal:
-                    case close:
+                    case door_normal:
+                    case door_close:
                         door->sector->specialdata = 0;
                         P_RemoveThinker(&door->thinker);  // unlink and free
                         break;
@@ -133,7 +133,7 @@ void T_VerticalDoor(vldoor_t* door)
                 switch (door->type)
                 {
                     case blazeClose:
-                    case close:                // DO NOT GO BACK UP!
+                    case door_close:                // DO NOT GO BACK UP!
                         break;
 
                     default:
@@ -157,14 +157,14 @@ void T_VerticalDoor(vldoor_t* door)
                 switch (door->type)
                 {
                     case blazeRaise:
-                    case normal:
+                    case door_normal:
                         door->direction = 0; // wait at top
                         door->topcountdown = door->topwait;
                         break;
 
                     case close30ThenOpen:
                     case blazeOpen:
-                    case open:
+                    case door_open:
                         door->sector->specialdata = 0;
                         P_RemoveThinker(&door->thinker);  // unlink and free
                         break;
@@ -274,7 +274,7 @@ int EV_DoDoor(line_t* line, vldoor_e type)
                              sfx_bdcls);
                 break;
 
-            case close:
+            case door_close:
                 door->topheight = P_FindLowestCeilingSurrounding(sec);
                 door->topheight -= 4 * FRACUNIT;
                 door->direction = -1;
@@ -300,8 +300,8 @@ int EV_DoDoor(line_t* line, vldoor_e type)
                                  sfx_bdopn);
                 break;
 
-            case normal:
-            case open:
+            case door_normal:
+            case door_open:
                 door->direction = 1;
                 door->topheight = P_FindLowestCeilingSurrounding(sec);
                 door->topheight -= 4 * FRACUNIT;
@@ -440,14 +440,14 @@ void EV_VerticalDoor(line_t* line, mobj_t* thing)
         case 26:
         case 27:
         case 28:
-            door->type = normal;
+            door->type = door_normal;
             break;
 
         case 31:
         case 32:
         case 33:
         case 34:
-            door->type = open;
+            door->type = door_open;
             line->special = 0;
             break;
 
@@ -485,7 +485,7 @@ void P_SpawnDoorCloseIn30(sector_t* sec)
     door->thinker.function.acp1 = (actionf_p1)T_VerticalDoor;
     door->sector = sec;
     door->direction = 0;
-    door->type = normal;
+    door->type = door_normal;
     door->speed = VDOORSPEED;
     door->topcountdown = 30 * 35;
 }

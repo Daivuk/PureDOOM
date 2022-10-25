@@ -118,7 +118,7 @@ void sdl_audio_callback(void* userdata, Uint8* stream, int len)
 You can use different bitrate, but make sure to resample because DOOM will always be 11025hz, 512 samples, 16 bits, 2 channels. For a total for 2048 bytes per buffer.
 
 ## Music
-Set a timer in your application that runs at 140hz. In the timer's callback, tick DOOM's music as long as there are MIDI messages to send. DDSP doesn't play the MIDI events for you (yet).
+Set a timer in your application that runs at 140hz. In the timer's callback, tick DOOM's music as long as there are MIDI messages to send.
 
 Here is an example using Window's MultiMedia to play MIDI events, using an SDL timer.
 ```c

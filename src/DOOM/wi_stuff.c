@@ -161,7 +161,7 @@ typedef struct
 
     // used by RANDOM and LEVEL when animating
     int state;
-} anim_t;
+} anim_t_wi_stuff;
 
 
 static point_t lnodes[NUMEPISODES][NUMMAPS] =
@@ -212,7 +212,7 @@ static point_t lnodes[NUMEPISODES][NUMMAPS] =
 // Using patches saves a lot of space,
 //  as they replace 320x200 full screen frames.
 //
-static anim_t epsd0animinfo[] =
+static anim_t_wi_stuff epsd0animinfo[] =
 {
     { ANIM_ALWAYS, TICRATE / 3, 3, { 224, 104 } },
     { ANIM_ALWAYS, TICRATE / 3, 3, { 184, 160 } },
@@ -226,7 +226,7 @@ static anim_t epsd0animinfo[] =
     { ANIM_ALWAYS, TICRATE / 3, 3, { 64, 24 } }
 };
 
-static anim_t epsd1animinfo[] =
+static anim_t_wi_stuff epsd1animinfo[] =
 {
     { ANIM_LEVEL, TICRATE / 3, 1, { 128, 136 }, 1 },
     { ANIM_LEVEL, TICRATE / 3, 1, { 128, 136 }, 2 },
@@ -239,7 +239,7 @@ static anim_t epsd1animinfo[] =
     { ANIM_LEVEL, TICRATE / 3, 1, { 128, 136 }, 8 }
 };
 
-static anim_t epsd2animinfo[] =
+static anim_t_wi_stuff epsd2animinfo[] =
 {
     { ANIM_ALWAYS, TICRATE / 3, 3, { 104, 168 } },
     { ANIM_ALWAYS, TICRATE / 3, 3, { 40, 136 } },
@@ -251,12 +251,12 @@ static anim_t epsd2animinfo[] =
 
 static int NUMANIMS[NUMEPISODES] =
 {
-    sizeof(epsd0animinfo) / sizeof(anim_t),
-    sizeof(epsd1animinfo) / sizeof(anim_t),
-    sizeof(epsd2animinfo) / sizeof(anim_t)
+    sizeof(epsd0animinfo) / sizeof(anim_t_wi_stuff),
+    sizeof(epsd1animinfo) / sizeof(anim_t_wi_stuff),
+    sizeof(epsd2animinfo) / sizeof(anim_t_wi_stuff)
 };
 
-static anim_t* anims[NUMEPISODES] =
+static anim_t_wi_stuff* anims_wi_stuff[NUMEPISODES] =
 {
     epsd0animinfo,
     epsd1animinfo,
@@ -478,7 +478,7 @@ void WI_drawOnLnode(int n, patch_t* c[])
 void WI_initAnimatedBack(void)
 {
     int i;
-    anim_t* a;
+    anim_t_wi_stuff* a;
 
     if (gamemode == commercial)
         return;
@@ -488,7 +488,7 @@ void WI_initAnimatedBack(void)
 
     for (i = 0; i < NUMANIMS[wbs->epsd]; i++)
     {
-        a = &anims[wbs->epsd][i];
+        a = &anims_wi_stuff[wbs->epsd][i];
 
         // init variables
         a->ctr = -1;
@@ -507,7 +507,7 @@ void WI_initAnimatedBack(void)
 void WI_updateAnimatedBack(void)
 {
     int i;
-    anim_t* a;
+    anim_t_wi_stuff* a;
 
     if (gamemode == commercial)
         return;
@@ -517,7 +517,7 @@ void WI_updateAnimatedBack(void)
 
     for (i = 0; i < NUMANIMS[wbs->epsd]; i++)
     {
-        a = &anims[wbs->epsd][i];
+        a = &anims_wi_stuff[wbs->epsd][i];
 
         if (bcnt == a->nexttic)
         {
@@ -557,7 +557,7 @@ void WI_updateAnimatedBack(void)
 void WI_drawAnimatedBack(void)
 {
     int i;
-    anim_t* a;
+    anim_t_wi_stuff* a;
 
     if (commercial)
         return;
@@ -567,7 +567,7 @@ void WI_drawAnimatedBack(void)
 
     for (i = 0; i < NUMANIMS[wbs->epsd]; i++)
     {
-        a = &anims[wbs->epsd][i];
+        a = &anims_wi_stuff[wbs->epsd][i];
 
         if (a->ctr >= 0)
             V_DrawPatch(a->loc.x, a->loc.y, FB, a->p[a->ctr]);
@@ -1475,7 +1475,7 @@ void WI_loadData(void)
     int i;
     int j;
     char name[9];
-    anim_t* a;
+    anim_t_wi_stuff* a;
 
     if (gamemode == commercial)
         doom_strcpy(name, "INTERPIC");
@@ -1536,7 +1536,7 @@ void WI_loadData(void)
         {
             for (j = 0; j < NUMANIMS[wbs->epsd]; j++)
             {
-                a = &anims[wbs->epsd][j];
+                a = &anims_wi_stuff[wbs->epsd][j];
                 for (i = 0; i < a->nanims; i++)
                 {
                     // MONDO HACK!
@@ -1555,7 +1555,7 @@ void WI_loadData(void)
                     else
                     {
                         // HACK ALERT!
-                        a->p[i] = anims[1][4].p[i];
+                        a->p[i] = anims_wi_stuff[1][4].p[i];
                     }
                 }
             }
@@ -1681,8 +1681,8 @@ void WI_unloadData(void)
             for (j = 0; j < NUMANIMS[wbs->epsd]; j++)
             {
                 if (wbs->epsd != 1 || j != 8)
-                    for (i = 0; i < anims[wbs->epsd][j].nanims; i++)
-                        Z_ChangeTag(anims[wbs->epsd][j].p[i], PU_CACHE);
+                    for (i = 0; i < anims_wi_stuff[wbs->epsd][j].nanims; i++)
+                        Z_ChangeTag(anims_wi_stuff[wbs->epsd][j].p[i], PU_CACHE);
             }
         }
     }

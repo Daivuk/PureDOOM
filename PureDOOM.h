@@ -7035,7 +7035,7 @@ unsigned long I_TickSong();
 
 
 #if defined(DOOM_IMPLEMENT_PRINT)
-//#include <stdio.h>
+#include <stdio.h>
 static void doom_print_impl(const char* str)
 {
     printf("%s", str);
@@ -7045,7 +7045,7 @@ static void doom_print_impl(const char* str) {}
 #endif
 
 #if defined(DOOM_IMPLEMENT_MALLOC)
-//#include <stdlib.h>
+#include <stdlib.h>
 static void* doom_malloc_impl(int size)
 {
     return malloc((size_t)size);
@@ -7061,7 +7061,7 @@ static void doom_free_impl(void* ptr) {}
 
 
 #if defined(DOOM_IMPLEMENT_FILE_IO)
-//#include <stdio.h>
+#include <stdio.h>
 void* doom_open_impl(const char* filename, const char* mode)
 {
     return fopen(filename, mode);
@@ -7121,9 +7121,9 @@ int doom_eof_impl(void* handle)
 
 #if defined(DOOM_IMPLEMENT_GETTIME)
 #if defined(WIN32)
-//#include <winsock.h>
+#include <winsock.h>
 #else
-//#include <sys/time.h>
+#include <sys/time.h>
 #endif
 void doom_gettime_impl(int* sec, int* usec)
 {
@@ -7156,7 +7156,7 @@ void doom_gettime_impl(int* sec, int* usec)
 
 
 #if defined(DOOM_IMPLEMENT_EXIT)
-//#include <stdlib.h>
+#include <stdlib.h>
 void doom_exit_impl(int code)
 {
     exit(code);
@@ -7167,7 +7167,7 @@ void doom_exit_impl(int code) {}
 
 
 #if defined(DOOM_IMPLEMENT_GETENV)
-//#include <stdlib.h>
+#include <stdlib.h>
 char* doom_getenv_impl(const char* var)
 {
     return getenv(var);

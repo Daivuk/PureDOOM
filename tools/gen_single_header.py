@@ -21,7 +21,13 @@ class File:
         self.headers = re.findall(r'#include \"(\w+\.h)\"', self.content)
 
         # Comment out includes
-        self.content = re.sub(r'#include', '//#include', self.content)
+        # Special handling is needed for DOOM.c. It includes system headers, and
+        # we can't comment those out. For DOOM.c, only comment out quoted
+        # includes. Otherwise, comment all of them.
+        if os.path.basename(filename) == "DOOM.c":
+            self.content = re.sub(r'#include[ \t]+\"', '//#include "', self.content)
+        else:
+            self.content = re.sub(r'#include', '//#include', self.content)
 
         # Remove copyrighted block of text at the top (We include copyright at the top of the PureDOOM.h)
         # This is done by finding the first non-empty line that doesn't start with `//`

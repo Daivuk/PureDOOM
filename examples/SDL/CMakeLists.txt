@@ -31,7 +31,7 @@ source_group("Example" FILES ${dpsdl_src_files})
 source_group("DOOM" FILES ${dpsdl_doom_src_files})
 
 # Executable
-add_executable(${PROJECT_NAME} ${dpsdl_src_files} ${dpsdl_doom_src_files})
+add_executable(${PROJECT_NAME} ${dpsdl_src_files})
 
 # Work dir
 set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../../")

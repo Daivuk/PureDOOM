@@ -24,7 +24,13 @@ class File:
         self.content = re.sub(r'#include', '//#include', self.content)
 
         # Remove copyrighted block of text at the top (We include copyright at the top of the PureDOOM.h)
-        self.content = self.content[self.content.find("#ifndef __"):]
+        # This is done by finding the first non-empty line that doesn't start with `//`
+        # Note the use of `:=`: https://docs.python.org/3/whatsnew/3.8.html#assignment-expressions
+        if (match := re.search(r'(^|\n)(?!//|\n)', self.content)) is not None:
+            # Get rid of everything up to and including the first match
+            # This works because the match is for the character preceeding where
+            # we should start - either `^` or the preceeding newline.
+            self.content = self.content[match.end():]
 
         # Clean up some "logs" at the end of the file
         self.content = re.sub(r'\/\/-----------------------------------------------------------------------------\n\/\/\n\/\/ \$Log\:\$\n\/\/\n\/\/-----------------------------------------------------------------------------', '', self.content)

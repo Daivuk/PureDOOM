@@ -818,7 +818,7 @@ void M_ReadSaveStrings(void)
             //doom_sprintf(name, SAVEGAMENAME"%d.dsg", i);
             doom_strcpy(name, SAVEGAMENAME);
             doom_concat(name, doom_itoa(i, 10));
-            doom_strcpy(name, ".dsg");
+            doom_concat(name, ".dsg");
         }
 
         handle = doom_open(name, "r");
@@ -886,7 +886,7 @@ void M_LoadSelect(int choice)
         //doom_sprintf(name, SAVEGAMENAME"%d.dsg", choice);
         doom_strcpy(name, SAVEGAMENAME);
         doom_concat(name, doom_itoa(choice, 10));
-        doom_strcpy(name, ".dsg");
+        doom_concat(name, ".dsg");
     }
     G_LoadGame(name);
     M_ClearMenus();

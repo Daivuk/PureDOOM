@@ -92,13 +92,13 @@ typedef struct
 
 
 // the set of channels available
-static channel_t* channels;
+static channel_t* channels_s_sound;
 
 // whether songs are mus_paused
 static doom_boolean mus_paused;
 
 // music currently being played
-static musicinfo_t* mus_playing = 0;
+static musicinfo_t* mus_playing_s_sound = 0;
 
 static int nextcleanup;
 
@@ -149,12 +149,12 @@ void S_Init(int sfxVolume, int musicVolume)
     // Allocating the internal channels for mixing
     // (the maximum numer of sounds rendered
     // simultaneously) within zone memory.
-    channels =
+    channels_s_sound =
         (channel_t*)Z_Malloc(numChannels * sizeof(channel_t), PU_STATIC, 0);
 
     // Free all channels for use
     for (i = 0; i < numChannels; i++)
-        channels[i].sfxinfo = 0;
+        channels_s_sound[i].sfxinfo = 0;
 
     // no sounds are playing, and they are not mus_paused
     mus_paused = 0;
@@ -178,7 +178,7 @@ void S_Start(void)
     // kill all playing sounds at start of level
     //  (trust me - a good idea)
     for (cnum = 0; cnum < numChannels; cnum++)
-        if (channels[cnum].sfxinfo)
+        if (channels_s_sound[cnum].sfxinfo)
             S_StopChannel(cnum);
 
     // start new music for the level
@@ -347,7 +347,7 @@ void S_StartSoundAtVolume(void* origin_p, int sfx_id, int volume)
 
     // Assigns the handle to one of the channels in the
     //  mix/output buffer.
-    channels[cnum].handle = I_StartSound(sfx_id,
+    channels_s_sound[cnum].handle = I_StartSound(sfx_id,
                                          /*sfx->data,*/
                                          volume,
                                          sep,
@@ -368,7 +368,7 @@ void S_StopSound(void* origin)
 
     for (cnum = 0; cnum < numChannels; cnum++)
     {
-        if (channels[cnum].sfxinfo && channels[cnum].origin == origin)
+        if (channels_s_sound[cnum].sfxinfo && channels_s_sound[cnum].origin == origin)
         {
             S_StopChannel(cnum);
             break;
@@ -382,9 +382,9 @@ void S_StopSound(void* origin)
 //
 void S_PauseSound(void)
 {
-    if (mus_playing && !mus_paused)
+    if (mus_playing_s_sound && !mus_paused)
     {
-        I_PauseSong(mus_playing->handle);
+        I_PauseSong(mus_playing_s_sound->handle);
         mus_paused = true;
     }
 }
@@ -392,9 +392,9 @@ void S_PauseSound(void)
 
 void S_ResumeSound(void)
 {
-    if (mus_playing && mus_paused)
+    if (mus_playing_s_sound && mus_paused)
     {
-        I_ResumeSong(mus_playing->handle);
+        I_ResumeSong(mus_playing_s_sound->handle);
         mus_paused = false;
     }
 }
@@ -417,7 +417,7 @@ void S_UpdateSounds(void* listener_p)
 
     for (cnum = 0; cnum < numChannels; cnum++)
     {
-        c = &channels[cnum];
+        c = &channels_s_sound[cnum];
         sfx = c->sfxinfo;
 
         if (c->sfxinfo)
@@ -529,7 +529,7 @@ void S_ChangeMusic(int musicnum, int looping)
     else
         music = &S_music[musicnum];
 
-    if (mus_playing == music)
+    if (mus_playing_s_sound == music)
         return;
 
     // shutdown old music
@@ -551,23 +551,23 @@ void S_ChangeMusic(int musicnum, int looping)
     // play it
     I_PlaySong(music->handle, looping);
 
-    mus_playing = music;
+    mus_playing_s_sound = music;
 }
 
 
 void S_StopMusic(void)
 {
-    if (mus_playing)
+    if (mus_playing_s_sound)
     {
         if (mus_paused)
-            I_ResumeSong(mus_playing->handle);
+            I_ResumeSong(mus_playing_s_sound->handle);
 
-        I_StopSong(mus_playing->handle);
-        I_UnRegisterSong(mus_playing->handle);
-        Z_ChangeTag(mus_playing->data, PU_CACHE);
+        I_StopSong(mus_playing_s_sound->handle);
+        I_UnRegisterSong(mus_playing_s_sound->handle);
+        Z_ChangeTag(mus_playing_s_sound->data, PU_CACHE);
 
-        mus_playing->data = 0;
-        mus_playing = 0;
+        mus_playing_s_sound->data = 0;
+        mus_playing_s_sound = 0;
     }
 }
 
@@ -575,7 +575,7 @@ void S_StopMusic(void)
 void S_StopChannel(int cnum)
 {
     int i;
-    channel_t* c = &channels[cnum];
+    channel_t* c = &channels_s_sound[cnum];
 
     if (c->sfxinfo)
     {
@@ -594,7 +594,7 @@ void S_StopChannel(int cnum)
         for (i = 0; i < numChannels; i++)
         {
             if (cnum != i
-                && c->sfxinfo == channels[i].sfxinfo)
+                && c->sfxinfo == channels_s_sound[i].sfxinfo)
             {
                 break;
             }
@@ -691,9 +691,9 @@ int S_getChannel(void* origin, sfxinfo_t* sfxinfo)
     // Find an open channel
     for (cnum = 0; cnum < numChannels; cnum++)
     {
-        if (!channels[cnum].sfxinfo)
+        if (!channels_s_sound[cnum].sfxinfo)
             break;
-        else if (origin && channels[cnum].origin == origin)
+        else if (origin && channels_s_sound[cnum].origin == origin)
         {
             S_StopChannel(cnum);
             break;
@@ -705,7 +705,7 @@ int S_getChannel(void* origin, sfxinfo_t* sfxinfo)
     {
         // Look for lower priority
         for (cnum = 0; cnum < numChannels; cnum++)
-            if (channels[cnum].sfxinfo->priority >= sfxinfo->priority) break;
+            if (channels_s_sound[cnum].sfxinfo->priority >= sfxinfo->priority) break;
 
         if (cnum == numChannels)
         {
@@ -719,7 +719,7 @@ int S_getChannel(void* origin, sfxinfo_t* sfxinfo)
         }
     }
 
-    c = &channels[cnum];
+    c = &channels_s_sound[cnum];
 
     // channel is decided to be cnum.
     c->sfxinfo = sfxinfo;

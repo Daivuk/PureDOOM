@@ -7173,7 +7173,7 @@ char* doom_getenv_impl(const char* var)
     return getenv(var);
 }
 #else
-char* doom_getenv_impl(const char* var) {}
+char* doom_getenv_impl(const char* var) { return 0; }
 #endif
 
 

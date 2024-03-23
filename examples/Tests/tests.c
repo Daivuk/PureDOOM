@@ -7,8 +7,14 @@
 
 #define FRAMEBUFFER_SIZE (320 * 200 * 4)
 
+void doom_exit_override(int code)
+{
+    exit(-1);
+}
+
 int main(int argc, char** argv)
 {
+    doom_set_exit(doom_exit_override);
     doom_init(argc, argv, 0);
     printf("Doom initialized\n");
 
@@ -29,5 +35,6 @@ int main(int argc, char** argv)
     fread(test_fb, 1, FRAMEBUFFER_SIZE, f);
     fclose(f);
 
-    return memcmp(fb, test_fb, FRAMEBUFFER_SIZE);
+    if (memcmp(fb, test_fb, FRAMEBUFFER_SIZE) != 0) return 3;
+    return 0;
 }

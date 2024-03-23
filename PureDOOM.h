@@ -21900,7 +21900,7 @@ enum
     load_end
 } load_e;
 
-menuitem_t LoadMenu[] =
+menuitem_t D_LoadMenu[] =
 {
     {1,"", M_LoadSelect,'1'},
     {1,"", M_LoadSelect,'2'},
@@ -21914,7 +21914,7 @@ menu_t  LoadDef =
 {
     load_end,
     &MainDef,
-    LoadMenu,
+    D_LoadMenu,
     M_DrawLoad,
     80,54,
     0
@@ -21997,12 +21997,12 @@ void M_ReadSaveStrings(void)
         if (handle == 0)
         {
             doom_strcpy(&savegamestrings[i][0], EMPTYSTRING);
-            LoadMenu[i].status = 0;
+            D_LoadMenu[i].status = 0;
             continue;
         }
         count = doom_read(handle, &savegamestrings[i], SAVESTRINGSIZE);
         doom_close(handle);
-        LoadMenu[i].status = 1;
+        D_LoadMenu[i].status = 1;
     }
 }
 

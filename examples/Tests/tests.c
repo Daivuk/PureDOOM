@@ -10,6 +10,7 @@
 int main(int argc, char** argv)
 {
     doom_init(argc, argv, 0);
+    printf("Doom initialized\n");
 
     int duration = 35 * 5;
     while (duration--)
@@ -17,6 +18,7 @@ int main(int argc, char** argv)
         doom_update();
     }
     const unsigned char* fb = doom_get_framebuffer(4);
+    printf("Frames rendered\n");
 
     FILE* f = fopen("test_framebuffer.raw", "rb");
     if (!f) return 1;

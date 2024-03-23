@@ -9,6 +9,7 @@
 
 void doom_exit_override(int code)
 {
+    printf("ERROR: Doom exit()\n");
     exit(80001);
 }
 
@@ -27,14 +28,28 @@ int main(int argc, char** argv)
     printf("Frames rendered\n");
 
     FILE* f = fopen("test_framebuffer.raw", "rb");
-    if (!f) return 80002;
+    if (!f)
+    {
+        printf("ERROR: Failed to open file: test_framebuffer.raw\n");
+        return 80002;
+    }
 
     void* test_fb = malloc(FRAMEBUFFER_SIZE);
-    if (!test_fb) return 80003;
+    if (!test_fb)
+    {
+        printf("ERROR: Out of memory\n");
+        return 80003;
+    }
 
     fread(test_fb, 1, FRAMEBUFFER_SIZE, f);
     fclose(f);
 
-    if (memcmp(fb, test_fb, FRAMEBUFFER_SIZE) != 0) return 80004;
+    if (memcmp(fb, test_fb, FRAMEBUFFER_SIZE) != 0)
+    {
+        printf("ERROR: Frames not matching\n");
+        return 80004;
+    }
+    
+    printf("SUCCESS: Frames matching\n");
     return 0;
 }

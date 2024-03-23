@@ -1,5 +1,4 @@
-build/
-build_workflow/
+build*/
 *.wad
 .doomrc
 references/

@@ -583,6 +583,15 @@ void doom_update()
 }
 
 
+void doom_force_update()
+{
+    if (is_wiping_screen)
+        D_UpdateWipe();
+    else
+        D_DoomLoop();
+}
+
+
 const unsigned char* doom_get_framebuffer(int channels)
 {
     int i, len;

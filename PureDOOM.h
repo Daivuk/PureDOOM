@@ -189,7 +189,8 @@ void doom_set_getenv(doom_getenv_fn getenv_fn);
 void doom_init(int argc, char** argv, int flags);
 
 // Call this every frame
-void doom_update();
+void doom_update(); // This will update at 35 FPS
+void doom_force_update(); // This will run a frame everytime it's called, regardless of FPS.
 
 // Channels: 1 = indexed, 3 = RGB, 4 = RGBA
 const unsigned char* doom_get_framebuffer(int channels);
@@ -7562,6 +7563,15 @@ void doom_update()
     }
 
     last_update_time = now;
+}
+
+
+void doom_force_update()
+{
+    if (is_wiping_screen)
+        D_UpdateWipe();
+    else
+        D_DoomLoop();
 }
 
 
@@ -21900,7 +21910,7 @@ enum
     load_end
 } load_e;
 
-menuitem_t D_LoadMenu[] =
+menuitem_t DOOM_LoadMenu[] =
 {
     {1,"", M_LoadSelect,'1'},
     {1,"", M_LoadSelect,'2'},
@@ -21914,7 +21924,7 @@ menu_t  LoadDef =
 {
     load_end,
     &MainDef,
-    D_LoadMenu,
+    DOOM_LoadMenu,
     M_DrawLoad,
     80,54,
     0
@@ -21997,12 +22007,12 @@ void M_ReadSaveStrings(void)
         if (handle == 0)
         {
             doom_strcpy(&savegamestrings[i][0], EMPTYSTRING);
-            D_LoadMenu[i].status = 0;
+            DOOM_LoadMenu[i].status = 0;
             continue;
         }
         count = doom_read(handle, &savegamestrings[i], SAVESTRINGSIZE);
         doom_close(handle);
-        D_LoadMenu[i].status = 1;
+        DOOM_LoadMenu[i].status = 1;
     }
 }
 

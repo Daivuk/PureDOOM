@@ -1,14 +1,12 @@
 #define DOOM_IMPLEMENTATION
 #include "PureDOOM.h"
-
 #include <memory.h>
-
 
 // Very simple unit test. We run it for 175 frames,
 // then we compare the frame buffer with our test frame buffer to see if they match.
 
 #define FRAMEBUFFER_SIZE (320 * 200 * 4)
-#define GEN_FRAME_TEST_DATA
+//#define GEN_FRAME_TEST_DATA
 
 void doom_exit_override(int code)
 {
@@ -25,12 +23,15 @@ int main(int argc, char** argv)
     printf("Doom initialized\n");
 
     int duration = 35 * 5;
-    while (duration--)
-    {
-        doom_update();
-    }
+    while (duration--) doom_force_update();
     const unsigned char* fb = doom_get_framebuffer(4);
     printf("Frames rendered\n");
+
+#if defined(GEN_FRAME_TEST_DATA)
+    f = fopen("test_framebuffer.raw", "wb");
+    fwrite(fb, 1, FRAMEBUFFER_SIZE, f);
+    fclose(f);
+#endif
 
     f = fopen("test_framebuffer.raw", "rb");
     if (!f)

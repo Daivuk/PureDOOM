@@ -189,7 +189,8 @@ void doom_set_getenv(doom_getenv_fn getenv_fn);
 void doom_init(int argc, char** argv, int flags);
 
 // Call this every frame
-void doom_update();
+void doom_update(); // This will update at 35 FPS
+void doom_force_update(); // This will run a frame everytime it's called, regardless of FPS.
 
 // Channels: 1 = indexed, 3 = RGB, 4 = RGBA
 const unsigned char* doom_get_framebuffer(int channels);

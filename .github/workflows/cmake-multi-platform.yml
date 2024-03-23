@@ -57,8 +57,9 @@ jobs:
     - uses: actions/setup-python@v5
 
     - name: Create single header
-      run: cd tools
-      run: python gen_single_header.py
+      shell: bash
+      run: |
+        cd tools && python gen_single_header.py
 
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.

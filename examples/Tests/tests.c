@@ -9,7 +9,7 @@
 
 void doom_exit_override(int code)
 {
-    exit(-1);
+    exit(80001);
 }
 
 int main(int argc, char** argv)
@@ -27,14 +27,14 @@ int main(int argc, char** argv)
     printf("Frames rendered\n");
 
     FILE* f = fopen("test_framebuffer.raw", "rb");
-    if (!f) return 1;
+    if (!f) return 80002;
 
     void* test_fb = malloc(FRAMEBUFFER_SIZE);
-    if (!test_fb) return 2;
+    if (!test_fb) return 80003;
 
     fread(test_fb, 1, FRAMEBUFFER_SIZE, f);
     fclose(f);
 
-    if (memcmp(fb, test_fb, FRAMEBUFFER_SIZE) != 0) return 3;
+    if (memcmp(fb, test_fb, FRAMEBUFFER_SIZE) != 0) return 80004;
     return 0;
 }

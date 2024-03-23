@@ -39,8 +39,9 @@ int main(int argc, char** argv)
     doom_init(argc, argv, 0);
     printf("Doom initialized\n");
 
-    int duration = 35 * 5;
-    while (duration--) doom_force_update();
+    //int duration = 35 * 2; // 2 seconds
+    //while (duration--) 
+    doom_force_update();
     const unsigned char* fb = doom_get_framebuffer(4);
     printf("Frames rendered\n");
 

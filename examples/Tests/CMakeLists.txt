@@ -25,7 +25,10 @@ add_executable(${PROJECT_NAME} ${dptests_src_files})
 set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../../")
 
 # Test
-add_test(NAME Tests WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../../" COMMAND ${PROJECT_NAME})
+add_test(
+    NAME Tests
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../../"
+    COMMAND ${PROJECT_NAME})
 
 # Lib/Headers
 target_include_directories(${PROJECT_NAME} PUBLIC ${dptests_includes})

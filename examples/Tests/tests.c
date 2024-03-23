@@ -1,6 +1,11 @@
 #define DOOM_IMPLEMENTATION
 #include "PureDOOM.h"
 #include <memory.h>
+#if !defined(WIN32)
+#include <unistd.h>
+#else
+#include <Windows.h>
+#endif
 
 // Very simple unit test. We run it for 175 frames,
 // then we compare the frame buffer with our test frame buffer to see if they match.
@@ -17,6 +22,18 @@ void doom_exit_override(int code)
 int main(int argc, char** argv)
 {
     FILE* f;
+
+    printf("Arguments: ");
+    for (int i = 0; i < argc; ++i) printf("%s ", argv[i]);
+    printf("\n");
+#if !defined(WIN32)
+    char buf[260];
+    printf("Work dir: %s\n", getcwd(buf, 260));
+#else
+    char buf[260];
+    GetCurrentDirectory(260, buf);
+    printf("Work dir: %s\n", buf);
+#endif
 
     doom_set_exit(doom_exit_override);
     doom_init(argc, argv, 0);

@@ -1418,6 +1418,23 @@ void M_FinishReadThis(int choice)
     M_SetupNextMenu(&MainDef);
 }
 
+//
+// When a secret is found (ColleagueRiley)
+//
+void doom_secretFound(int s) {
+    static lastTime = 0;
+    if (lastTime == 0) {
+        lastTime = I_GetTime();
+        S_StartSound(0, sfx_getpow);
+    }
+    
+    if (I_GetTime() >= lastTime + 20)
+        lastTime = 0;
+    else
+        messageToPrint = 1;
+    
+    menuactive = 0;
+}
 
 //
 // M_QuitDOOM

@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <memory.h>
 
-#if 1 // Use the PureDOOM.h single header
+#if defined(DOOM_EXAMPLE_USE_SINGLE_HEADER) // Use the PureDOOM.h single header
 #define DOOM_IMPLEMENTATION
 #include "../../PureDOOM.h"
 #else

@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.0)
 # Project
 project(pd_sdl_example)
 
+option(DOOM_USE_SINGLE_HEADER "Use single header instead of doom source" ON)
+
 # add_definitions(-DDOOM_FAST_TICK)
 add_definitions(
     -DDOOM_IMPLEMENT_PRINT
@@ -16,8 +18,12 @@ add_definitions(
 
 # Sources
 file(GLOB dpsdl_src_files sdl_example.c)
-file(GLOB dpsdl_doom_src_files ../../src/DOOM/*.*)
-list(APPEND dpsdl_includes PUBLIC ../../src/)
+if (DOOM_USE_SINGLE_HEADER)
+    add_definitions(-DDOOM_EXAMPLE_USE_SINGLE_HEADER)
+else()
+    file(GLOB dpsdl_doom_src_files ../../src/DOOM/*.*)
+    list(APPEND dpsdl_includes PUBLIC ../../src/)
+endif()
 
 # SDL
 add_definitions(-DSDL_MAIN_HANDLED)
@@ -31,7 +37,7 @@ source_group("Example" FILES ${dpsdl_src_files})
 source_group("DOOM" FILES ${dpsdl_doom_src_files})
 
 # Executable
-add_executable(${PROJECT_NAME} ${dpsdl_src_files})
+add_executable(${PROJECT_NAME} ${dpsdl_src_files} ${dpsdl_doom_src_files})
 
 # Work dir
 set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../../")

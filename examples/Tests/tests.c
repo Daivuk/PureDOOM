@@ -1,5 +1,10 @@
+#if defined(DOOM_EXAMPLE_USE_SINGLE_HEADER) // Use the PureDOOM.h single header
 #define DOOM_IMPLEMENTATION
-#include "PureDOOM.h"
+#include "../../PureDOOM.h"
+#else
+#include "DOOM/DOOM.h"
+#endif
+#include <stdio.h>
 #include <memory.h>
 #if !defined(WIN32)
 #include <unistd.h>

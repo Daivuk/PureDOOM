@@ -1008,6 +1008,9 @@ void P_PlayerInSpecialSector(player_t* player)
         case 9:
             // SECRET SECTOR
             player->secretcount++;
+            menuactive = false;
+            M_StartMessage("A secret is revealed!\n", doom_secretFound, false);
+            menuactive = false;
             sector->special = 0;
             break;
 

@@ -22600,6 +22600,28 @@ void M_FinishReadThis(int choice)
     M_SetupNextMenu(&MainDef);
 }
 
+//
+// When a secret is found (ColleagueRiley)
+//
+void doom_secretFound(int s) {
+    static int lastTime = 0;
+    int usec;
+
+    if (lastTime == 0) {
+        doom_gettime(&lastTime, &usec);
+        S_StartSound(0, sfx_getpow);
+    }
+    
+    int curTime;
+    doom_gettime(&curTime, &usec);
+
+    if (curTime >= lastTime + 1)
+        lastTime = 0;
+    else
+        messageToPrint = 1;
+    
+    menuactive = 0;
+}
 
 //
 // M_QuitDOOM
@@ -23003,8 +23025,10 @@ doom_boolean M_Responder(event_t* ev)
         if (messageRoutine)
             messageRoutine(ch);
 
+        if (menuactive)
+            S_StartSound(0, sfx_swtchx);
+        
         menuactive = false;
-        S_StartSound(0, sfx_swtchx);
         return true;
     }
 
@@ -34735,6 +34759,9 @@ void P_PlayerInSpecialSector(player_t* player)
         case 9:
             // SECRET SECTOR
             player->secretcount++;
+            menuactive = false;
+            M_StartMessage("A secret is revealed!\n", doom_secretFound, false);
+            menuactive = false;
             sector->special = 0;
             break;
 

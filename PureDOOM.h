@@ -189,7 +189,8 @@ void doom_set_getenv(doom_getenv_fn getenv_fn);
 void doom_init(int argc, char** argv, int flags);
 
 // Call this every frame
-void doom_update();
+void doom_update(); // This will update at 35 FPS
+void doom_force_update(); // This will run a frame everytime it's called, regardless of FPS.
 
 // Channels: 1 = indexed, 3 = RGB, 4 = RGBA
 const unsigned char* doom_get_framebuffer(int channels);
@@ -7562,6 +7563,15 @@ void doom_update()
     }
 
     last_update_time = now;
+}
+
+
+void doom_force_update()
+{
+    if (is_wiping_screen)
+        D_UpdateWipe();
+    else
+        D_DoomLoop();
 }
 
 
@@ -15816,6 +15826,7 @@ void I_UpdateSound(void)
     register unsigned int sample;
     register int dl;
     register int dr;
+
     // Pointers in global mixbuffer, left, right, end.
     signed short* leftout;
     signed short* rightout;
@@ -23009,10 +23020,8 @@ doom_boolean M_Responder(event_t* ev)
         if (messageRoutine)
             messageRoutine(ch);
 
-        if (menuactive)
-            S_StartSound(0, sfx_swtchx);
-        
         menuactive = false;
+        S_StartSound(0, sfx_swtchx);
         return true;
     }
 

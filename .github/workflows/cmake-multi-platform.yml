@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
 
-    name: Tests ${{ matrix.os }}, ${{ matrix.c_compiler }}, ${{ matrix.single_header == 'ON' ? 'single-header' : '' }}
+    name: Tests ${{ matrix.os }}, ${{ matrix.c_compiler }}, ${{ matrix.single_header == 'ON' && 'single-header' || ' ' }}
 
     strategy:
       # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.

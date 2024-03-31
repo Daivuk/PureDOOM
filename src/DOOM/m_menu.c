@@ -1422,13 +1422,18 @@ void M_FinishReadThis(int choice)
 // When a secret is found (ColleagueRiley)
 //
 void doom_secretFound(int s) {
-    static lastTime = 0;
+    static int lastTime = 0;
+    int usec;
+
     if (lastTime == 0) {
-        lastTime = I_GetTime();
+        doom_gettime(&lastTime, &usec);
         S_StartSound(0, sfx_getpow);
     }
     
-    if (I_GetTime() >= lastTime + 20)
+    int curTime;
+    doom_gettime(&curTime, &usec);
+
+    if (curTime >= lastTime + 1)
         lastTime = 0;
     else
         messageToPrint = 1;
@@ -1838,8 +1843,10 @@ doom_boolean M_Responder(event_t* ev)
         if (messageRoutine)
             messageRoutine(ch);
 
+        if (menuactive)
+            S_StartSound(0, sfx_swtchx);
+        
         menuactive = false;
-        S_StartSound(0, sfx_swtchx);
         return true;
     }
 

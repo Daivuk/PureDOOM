@@ -1008,6 +1008,8 @@ void P_PlayerInSpecialSector(player_t* player)
         case 9:
             // SECRET SECTOR
             player->secretcount++;
+            player->message = "A secret is revealed!";
+            S_StartSound(0, sfx_getpow);
             sector->special = 0;
             break;
 

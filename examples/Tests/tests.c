@@ -4,7 +4,9 @@
 #else
 #include "DOOM/DOOM.h"
 #endif
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <memory.h>
 #if !defined(WIN32)
 #include <unistd.h>

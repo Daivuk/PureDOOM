@@ -17,12 +17,12 @@ See end of file for license information.
 - Menu option to disable mouse move Forward/Backward
 - Crosshair option
 - Always-Run option
+- Print message when discovered a secret
 
 ## TODOs
 - Custom resolution
 - Remove exit and have update return 0 on quit. Add doom_get_exit_code()
 - Implement Sockets and Multiplayer
-- Print message when discovered a secret
 
 ## Cool TODOs to have
 - Rebindable keys

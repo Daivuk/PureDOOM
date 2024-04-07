@@ -7539,6 +7539,7 @@ void doom_init(int argc, char** argv, int flags)
 
     screen_buffer = doom_malloc(SCREENWIDTH * SCREENHEIGHT);
     final_screen_buffer = doom_malloc(SCREENWIDTH * SCREENHEIGHT * 4);
+    doom_memset(final_screen_buffer, 0x000000FF, SCREENWIDTH * SCREENHEIGHT * 4);
     last_update_time = I_GetTime();
 
     myargc = argc;
@@ -7612,35 +7613,18 @@ const unsigned char* doom_get_framebuffer(int channels)
     {
         return screen_buffer;
     }
-    else if (channels == 3)
-    {
+    else if (channels == 3 || channels == 4) {
         for (i = 0, len = SCREENWIDTH * SCREENHEIGHT; i < len; ++i)
         {
-            int k = i * 3;
+            int k = i * channels;
             int kpal = screen_buffer[i] * 3;
-            final_screen_buffer[k + 0] = screen_palette[kpal + 0];
-            final_screen_buffer[k + 1] = screen_palette[kpal + 1];
-            final_screen_buffer[k + 2] = screen_palette[kpal + 2];
+
+            doom_memcpy(final_screen_buffer + k, screen_palette + kpal, 3);
         }
         return final_screen_buffer;
     }
-    else if (channels == 4)
-    {
-        for (i = 0, len = SCREENWIDTH * SCREENHEIGHT; i < len; ++i)
-        {
-            int k = i * 4;
-            int kpal = screen_buffer[i] * 3;
-            final_screen_buffer[k + 0] = screen_palette[kpal + 0];
-            final_screen_buffer[k + 1] = screen_palette[kpal + 1];
-            final_screen_buffer[k + 2] = screen_palette[kpal + 2];
-            final_screen_buffer[k + 3] = 255;
-        }
-        return final_screen_buffer;
-    }
-    else
-    {
-        return 0;
-    }
+
+    return 0;
 }
 
 

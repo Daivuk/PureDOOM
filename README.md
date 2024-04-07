@@ -17,6 +17,7 @@ See end of file for license information.
 - Menu option to disable mouse move Forward/Backward
 - Crosshair option
 - Always-Run option
+- Displays a message when a secret is found
 
 ## TODOs
 - Custom resolution

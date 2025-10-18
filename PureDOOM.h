@@ -7141,8 +7141,14 @@ void doom_gettime_impl(int* sec, int* usec)
     *usec = (int)(system_time.wMilliseconds * 1000);
 #else
     struct timeval tp;
+
+#ifdef __linux__
+    gettimeofday(&tp, NULL);
+#else
     struct timezone tzp;
     gettimeofday(&tp, &tzp);
+#endif
+
     *sec = tp.tv_sec;
     *usec = tp.tv_usec;
 #endif

@@ -43,6 +43,7 @@
 
 #define ZONEID 0x1d4a11
 #define MINFRAGMENT 64
+#define MEM_ALIGN sizeof(void *)
 
 
 typedef struct
@@ -182,7 +183,7 @@ void* Z_Malloc(int size, int tag, void* user)
     memblock_t* newblock;
     memblock_t* base;
 
-    size = (size + 3) & ~3;
+    size = (size + MEM_ALIGN - 1) & ~(MEM_ALIGN - 1);
 
     // scan through the block list,
     // looking for the first free block

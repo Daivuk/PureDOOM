@@ -21222,8 +21222,19 @@ fixed_t FixedDiv(fixed_t a, fixed_t b)
 }
 
 
+// Define DOOM_NO_FLOATING_POINT to disable use of floating point.
 fixed_t FixedDiv2(fixed_t a, fixed_t b)
 {
+#if defined(DOOM_NO_FLOATING_POINT)
+    // Integer-only rewrite of the original double-precision version
+    long long c;
+
+    c = ((long long)a << FRACBITS) / (long long)b;
+
+    if (c >= 2147483648LL || c < -2147483648LL)
+        I_Error("Error: FixedDiv: divide by zero");
+    return (fixed_t)c;
+#else
     double c;
 
     c = ((double)a) / ((double)b) * FRACUNIT;
@@ -21231,6 +21242,7 @@ fixed_t FixedDiv2(fixed_t a, fixed_t b)
     if (c >= 2147483648.0 || c < -2147483648.0)
         I_Error("Error: FixedDiv: divide by zero");
     return (fixed_t)c;
+#endif
 }
 #define SAVESTRINGSIZE 24
 #define SKULLXOFF -32

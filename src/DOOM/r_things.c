@@ -200,6 +200,7 @@ void R_InitSpriteDefs(char** namelist)
     int                i;
     int                l;
     int                intname;
+    int                lumpname;
     int                frame;
     int                rotation;
     int                start;
@@ -230,13 +231,14 @@ void R_InitSpriteDefs(char** namelist)
         doom_memset(sprtemp, -1, sizeof(sprtemp));
 
         maxframe = -1;
-        intname = *(int*)namelist[i];
+        doom_memcpy(&intname, namelist[i], sizeof(intname));
 
         // scan the lumps,
         //  filling in the frames for whatever is found
         for (l = start + 1; l < end; l++)
         {
-            if (*(int*)lumpinfo[l].name == intname)
+            doom_memcpy(&lumpname, lumpinfo[l].name, sizeof(lumpname));
+            if (lumpname == intname)
             {
                 frame = lumpinfo[l].name[4] - 'A';
                 rotation = lumpinfo[l].name[5] - '0';

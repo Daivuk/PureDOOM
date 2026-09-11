@@ -118,6 +118,7 @@ void P_ArchiveWorld(void)
     side_t* si;
     short* put;
 
+    PADSAVEP();
     put = (short*)save_p;
 
     // do sectors
@@ -170,6 +171,7 @@ void P_UnArchiveWorld(void)
     side_t* si;
     short* get;
 
+    PADSAVEP();
     get = (short*)save_p;
 
     // do sectors

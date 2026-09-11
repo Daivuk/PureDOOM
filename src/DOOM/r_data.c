@@ -440,7 +440,8 @@ void R_InitTextures(void)
     // Load the patch names from pnames.lmp.
     name[8] = 0;
     names = W_CacheLumpName("PNAMES", PU_STATIC);
-    nummappatches = LONG(*((int*)names));
+    doom_memcpy(&nummappatches, names, sizeof(nummappatches));
+    nummappatches = LONG(nummappatches);
     name_p = names + 4;
     patchlookup = doom_malloc(nummappatches * sizeof(*patchlookup));
 

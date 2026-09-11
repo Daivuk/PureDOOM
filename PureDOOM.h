@@ -14939,13 +14939,14 @@ int GetLocalAddress(void)
     char hostname[1024];
     struct hostent* hostentry; // host information entry
     int v;
+    int address;
 
     // get local address
     v = gethostname(hostname, sizeof(hostname));
     if (v == -1)
     {
         //I_Error("Error: GetLocalAddress : gethostname: errno %d", errno);
-        
+
         doom_strcpy(error_buf, "Error: GetLocalAddress : gethostname: errno ");
         doom_concat(error_buf, strerror(errno));
         I_Error(error_buf);
@@ -14957,7 +14958,8 @@ int GetLocalAddress(void)
         I_Error("Error: GetLocalAddress : gethostbyname: couldn't get local host");
     }
 
-    return *(int*)hostentry->h_addr_list[0];
+    doom_memcpy(&address, hostentry->h_addr_list[0], sizeof(address));
+    return address;
 #else
     return 0;
 #endif
@@ -15069,8 +15071,9 @@ void I_InitNetwork(void)
                 doom_concat(error_buf, myargv[i]);
                 I_Error(error_buf);
             }
-            sendaddress[doomcom->numnodes].sin_addr.s_addr
-                = *(int*)hostentry->h_addr_list[0];
+            doom_memcpy(&sendaddress[doomcom->numnodes].sin_addr.s_addr,
+                        hostentry->h_addr_list[0],
+                        sizeof(sendaddress[doomcom->numnodes].sin_addr.s_addr));
         }
         doomcom->numnodes++;
     }
@@ -32375,6 +32378,7 @@ void P_ArchiveWorld(void)
     side_t* si;
     short* put;
 
+    PADSAVEP();
     put = (short*)save_p;
 
     // do sectors
@@ -32427,6 +32431,7 @@ void P_UnArchiveWorld(void)
     side_t* si;
     short* get;
 
+    PADSAVEP();
     get = (short*)save_p;
 
     // do sectors
@@ -37072,7 +37077,8 @@ void R_InitTextures(void)
     // Load the patch names from pnames.lmp.
     name[8] = 0;
     names = W_CacheLumpName("PNAMES", PU_STATIC);
-    nummappatches = LONG(*((int*)names));
+    doom_memcpy(&nummappatches, names, sizeof(nummappatches));
+    nummappatches = LONG(nummappatches);
     name_p = names + 4;
     patchlookup = doom_malloc(nummappatches * sizeof(*patchlookup));
 
@@ -40176,6 +40182,7 @@ void R_InitSpriteDefs(char** namelist)
     int                i;
     int                l;
     int                intname;
+    int                lumpname;
     int                frame;
     int                rotation;
     int                start;
@@ -40206,13 +40213,14 @@ void R_InitSpriteDefs(char** namelist)
         doom_memset(sprtemp, -1, sizeof(sprtemp));
 
         maxframe = -1;
-        intname = *(int*)namelist[i];
+        doom_memcpy(&intname, namelist[i], sizeof(intname));
 
         // scan the lumps,
         //  filling in the frames for whatever is found
         for (l = start + 1; l < end; l++)
         {
-            if (*(int*)lumpinfo[l].name == intname)
+            doom_memcpy(&lumpname, lumpinfo[l].name, sizeof(lumpname));
+            if (lumpname == intname)
             {
                 frame = lumpinfo[l].name[4] - 'A';
                 rotation = lumpinfo[l].name[5] - '0';
@@ -46172,6 +46180,8 @@ int W_CheckNumForName(char* name)
 
     int v1;
     int v2;
+    int n1;
+    int n2;
     lumpinfo_t* lump_p;
 
     // make the name into two integers for easy compares
@@ -46192,8 +46202,10 @@ int W_CheckNumForName(char* name)
 
     while (lump_p-- != lumpinfo)
     {
-        if (*(int*)lump_p->name == v1
-            && *(int*)&lump_p->name[4] == v2)
+        doom_memcpy(&n1, lump_p->name, sizeof(n1));
+        doom_memcpy(&n2, &lump_p->name[4], sizeof(n2));
+
+        if (n1 == v1 && n2 == v2)
         {
             return (int)(lump_p - lumpinfo);
         }

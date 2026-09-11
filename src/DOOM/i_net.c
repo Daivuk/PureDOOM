@@ -281,13 +281,14 @@ int GetLocalAddress(void)
     char hostname[1024];
     struct hostent* hostentry; // host information entry
     int v;
+    int address;
 
     // get local address
     v = gethostname(hostname, sizeof(hostname));
     if (v == -1)
     {
         //I_Error("Error: GetLocalAddress : gethostname: errno %d", errno);
-        
+
         doom_strcpy(error_buf, "Error: GetLocalAddress : gethostname: errno ");
         doom_concat(error_buf, strerror(errno));
         I_Error(error_buf);
@@ -299,7 +300,8 @@ int GetLocalAddress(void)
         I_Error("Error: GetLocalAddress : gethostbyname: couldn't get local host");
     }
 
-    return *(int*)hostentry->h_addr_list[0];
+    doom_memcpy(&address, hostentry->h_addr_list[0], sizeof(address));
+    return address;
 #else
     return 0;
 #endif
@@ -411,8 +413,9 @@ void I_InitNetwork(void)
                 doom_concat(error_buf, myargv[i]);
                 I_Error(error_buf);
             }
-            sendaddress[doomcom->numnodes].sin_addr.s_addr
-                = *(int*)hostentry->h_addr_list[0];
+            doom_memcpy(&sendaddress[doomcom->numnodes].sin_addr.s_addr,
+                        hostentry->h_addr_list[0],
+                        sizeof(sendaddress[doomcom->numnodes].sin_addr.s_addr));
         }
         doomcom->numnodes++;
     }

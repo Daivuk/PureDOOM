@@ -347,6 +347,8 @@ int W_CheckNumForName(char* name)
 
     int v1;
     int v2;
+    int n1;
+    int n2;
     lumpinfo_t* lump_p;
 
     // make the name into two integers for easy compares
@@ -367,8 +369,10 @@ int W_CheckNumForName(char* name)
 
     while (lump_p-- != lumpinfo)
     {
-        if (*(int*)lump_p->name == v1
-            && *(int*)&lump_p->name[4] == v2)
+        doom_memcpy(&n1, lump_p->name, sizeof(n1));
+        doom_memcpy(&n2, &lump_p->name[4], sizeof(n2));
+
+        if (n1 == v1 && n2 == v2)
         {
             return (int)(lump_p - lumpinfo);
         }
